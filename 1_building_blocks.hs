@@ -44,4 +44,20 @@ sumTail xs = sumTail' 0 xs
 --sumNonTail is a recursive function that expresses a recursive process.
 --sumTail is a recursive function that expresses an iterative process.
 
+-- Folding abstracts recursion
 
+-- foldl expands the same as sumTail'
+foldlSum = foldl (+) 0
+
+-- foldr expands the same as sumNonTail
+foldrSum = foldr (+) 0
+
+-- foldl/foldr def:
+foldr' _ v [] = v
+foldr' f v (x:xs) = f x (foldr' f v xs)
+-- Recursion is 'trapped' by f, making foldr non-tail recursive
+
+foldl' _ v [] = v
+foldl' f v (x:xs) = foldl' f (f v x) xs
+
+-- Types, pattern matching, and polymorphism
