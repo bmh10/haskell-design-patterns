@@ -61,3 +61,15 @@ foldl' _ v [] = v
 foldl' f v (x:xs) = foldl' f (f v x) xs
 
 -- Types, pattern matching, and polymorphism
+
+data Persion = P String Int         -- combination -> product of types
+data MaybeInt = NoInt | JustInt Int -- alternation -> sum of types
+data Maybe' a = Nothing' | Just' a  -- generic
+
+-- Algebraic data type constructors serve as 'deconstructors' in pattern matching.
+-- Left of '=' -> deconstruct, right of '=' -> construct
+-- Patern matching is therefore the complement of algebraic data types.
+fMaybe f (Just' x) = Just' (f x)
+fMaybe f Nothing'  = Nothing'
+
+-- Recursive types
