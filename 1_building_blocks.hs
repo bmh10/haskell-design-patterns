@@ -73,3 +73,12 @@ fMaybe f (Just' x) = Just' (f x)
 fMaybe f Nothing'  = Nothing'
 
 -- Recursive types
+-- Composite pattern can be captured using recursive algebraic types
+data Tree a = Leaf a | Branch (Tree a) (Tree a)
+
+-- Functions over recursive types are typically also recursive:
+size :: Tree a -> Int
+size (Leaf _) = 1
+size (Branch l r) = size l + size r + 1
+
+
