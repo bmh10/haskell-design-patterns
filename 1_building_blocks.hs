@@ -81,4 +81,18 @@ size :: Tree a -> Int
 size (Leaf _) = 1
 size (Branch l r) = size l + size r + 1
 
+-- Polymorphism
+-- Type 1 : Parametric
+
+length' :: [a] -> Int
+length' []     = 0
+length' (x:xs) = 1 + length xs
+
+-- Above function exhibits parametric polymorphism because it acts uniformly
+-- on a range of types with common structure (i.e. lists).
+-- Functions defined on parametric data types tend to be generic.
+
+-- Type 2 : Ad-hoc
+-- Also known as 'overloading'
+
 
