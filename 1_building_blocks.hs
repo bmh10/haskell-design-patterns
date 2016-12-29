@@ -162,3 +162,25 @@ payment_handler (InvoiceNonPayment) (Organisation id) = "SendWarning for " ++ (s
 
 -- Unifying parametric and ad-hoc polymorphism
 
+-- Parametric polymorphism -> single generic functions acts on variety of types (true polymorphism)
+-- Ad-hoc polymorphism     -> overloaded funtion that is resolved to particular function by compiler (apparent/synthetic polymorphism)
+
+-- Therefore:
+-- Parametric polymorphism -> allows us to lift the level of abstraction
+-- Ad-hoc polymorphism     -> gives us powerful tool for decoupling
+
+-- Haskell blurs the distinction e.g.
+
+{-
+class Eq a where
+  (==), (/=) :: a -> a -> Bool
+  x == y = not (x /= y)
+  x /= y = not (x == y)
+
+== and /= are given mutually recursive definitions. Implementer has to implement at least one.
+Therefore, once function would be specialised (ad-hoc), leaving the other to be defiend at a
+generic level (parametric).
+-}
+
+-- Functions, types and patterns
+
