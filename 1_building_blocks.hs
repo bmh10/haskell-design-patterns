@@ -114,4 +114,29 @@ instance Float Num where
 
 -- Alternation based ad-hoc polymorphism
 
+data Shape = Circle Float | Rect Float Float
+
+area :: Shape -> Float
+area (Circle r) = pi * r^2
+area (Rect l w) = l * w
+
+-- Area function is dispatched over the alternations of the Shape type
+
+-- Class based ad-hoc polymorphism
+
+data Circle = Circle Float
+data Rect = Rect Float Float
+
+class Shape a where
+  area :: a -> Float
+
+instance Shape Circle where
+  area (Circle r) = pi * r^2
+
+instance Shape Rect where 
+  area (Rect l w) = l * w
+
+-- Here the two classes are unified through a Shape class.
+
+-- Polymorphic dispatch and the visitor pattern
 
