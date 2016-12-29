@@ -95,4 +95,23 @@ length' (x:xs) = 1 + length xs
 -- Type 2 : Ad-hoc
 -- Also known as 'overloading'
 
+-- Standard example is the polymorphic + operator:
+{-
+class Num a where
+  (+) :: a -> a -> a
+
+instance Int Num where
+  (+) :: Int -> Int -> Int
+  x + y = intPlus x y
+
+instance Float Num where
+  (+) :: Float -> Float -> Float
+  x + y = floatPlus x y
+-}
+
+-- In an expression x = 1 + 3.14. Since 1 is of type Num it can be treated
+-- as an int, float etc. depending on context.
+
+-- Alternation based ad-hoc polymorphism
+
 
