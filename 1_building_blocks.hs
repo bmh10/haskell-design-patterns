@@ -138,5 +138,27 @@ instance Shape Rect where
 
 -- Here the two classes are unified through a Shape class.
 
+
 -- Polymorphic dispatch and the visitor pattern
+
+-- Static type dispatch -> resolved at compile time
+-- Dynamic type dispatch -> resolved at runtime
+
+-- Double dispatch (2 args) example:
+
+data CustomerEvent = InvoicePaid Float | InvoiceNonPayment
+data Customer      = Individual Int    | Organisation Int
+
+payment_handler :: CustomerEvent -> Customer -> String
+
+payment_handler (InvoicePaid amt) (Individual id)   = "SendReceipt for " ++ (show amt)
+payment_handler (InvoicePaid amt) (Organisation id) = "SendReceipt for " ++ (show amt)
+
+payment_handler (InvoiceNonPayment) (Individual id)   = "CancelService for " ++ (show id)
+payment_handler (InvoiceNonPayment) (Organisation id) = "SendWarning for " ++ (show id)
+
+-- payment_handler defined behaviour for all 4 permutations.
+-- In OOP we have to resort to the visitor pattern to achieve multiple dispatch.
+
+-- Unifying parametric and ad-hoc polymorphism
 
