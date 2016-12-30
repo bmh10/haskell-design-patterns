@@ -209,3 +209,19 @@ class TemplateAlgorithm where
         setup
         work
         teardown
+
+
+-- Iterator Pattern
+
+it = map square [2, 3, 5, 7]
+
+-- map navigates list strcuture, while square acts on individual elements.
+-- Therefore control flow is decoupled from function application, as with the Iterator Pattern
+
+
+-- Decoupling behaviour and modularizing code
+
+-- Passing one function into another => decoupling two parts of code.
+-- The functions can be changed at different rates and reside in different modules.
+
+
