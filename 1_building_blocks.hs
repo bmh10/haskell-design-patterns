@@ -195,3 +195,17 @@ strategy fSetup fTeardown
 -- Caller passes in functions as arguments. Allows decoupling an algorithm from parts that may change.
 
 
+-- Template Pattern
+
+-- Strategy pattern uses delgation to vary an algorithm
+-- Template pattern uses inheritance to vary an algorithm -> in Haskell we can use type classes to achieve the same:
+
+class TemplateAlgorithm where
+  setup :: IO a -> a
+  teardown :: IO a -> a
+  doWork :: a -> a
+  fullfillPurpose
+    = do
+        setup
+        work
+        teardown
