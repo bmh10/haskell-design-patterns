@@ -1,3 +1,5 @@
+import System.Random
+
 -- 1. Functional Patterns - the building blocks
 
 --Gluing modules together in haskell:
