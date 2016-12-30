@@ -230,4 +230,41 @@ it = map square [2, 3, 5, 7]
 -- All functions in Haskell are lazy by default.
 -- One of the motivations of the Proxy Pattern is to defer evaluation => this is done implicity by lazy evaluation.
 
- 
+-- Streams
+
+-- Self-reference ex:
+infinite42s = 42 : infinite42s
+
+takeFromInfiniteEx = (take 5 infinite42s)
+
+-- Example of random number generation:
+
+generate :: StdGen -> (Int, StdGen)
+generate g = random g :: (Int, StdGen)
+
+mainRandomEx = do
+  gen0 <- getStdGen
+  let (int1, gen1) = generate gen0
+  let (int2, gen2) = generate gen1
+
+-- Each time we want a new random int we must pass the new generator to generate function.
+
+-- We can hide this to make our intent more clear by using an infinite stream:
+
+randInts' g = (randInt, g) : (randInts' nextGen)
+  where (randInt, nextGen) = generate g
+
+-- Select only the random ints (hide the generators):
+randInts g = map fst (randInts' g)
+
+mainRandomEx2 = do
+  g <- getStdGen
+  print $ take 3 $ randInts g
+
+-- Stream of rands between 0 - 100:
+randAmounts g = map (\x -> x `mod` 100) (randInts g)
+
+-- Consuming random numbers is now independent from producing them.
+-- Also, have decoupling between iteration and termination.
+
+-- Modeling change with streams
