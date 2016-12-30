@@ -224,4 +224,10 @@ it = map square [2, 3, 5, 7]
 -- Passing one function into another => decoupling two parts of code.
 -- The functions can be changed at different rates and reside in different modules.
 
+-- Lazy Evaluation
 
+-- Cons (:) is lazy. It only evaluates its first argument.
+-- All functions in Haskell are lazy by default.
+-- One of the motivations of the Proxy Pattern is to defer evaluation => this is done implicity by lazy evaluation.
+
+ 
