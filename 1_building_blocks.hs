@@ -184,3 +184,14 @@ generic level (parametric).
 
 -- Functions, types and patterns
 
+-- Strategy Pattern
+
+strategy fSetup fTeardown
+  = do
+      fSetup
+      -- carry out main function purpose
+      fTeardown
+
+-- Caller passes in functions as arguments. Allows decoupling an algorithm from parts that may change.
+
+
