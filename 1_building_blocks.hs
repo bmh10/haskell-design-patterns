@@ -270,3 +270,24 @@ randAmounts g = map (\x -> x `mod` 100) (randInts g)
 -- Also, have decoupling between iteration and termination.
 
 -- Modeling change with streams
+
+-- When modelling a banking system in a non-pure language we would typically
+-- store an account balance in a mutable variable which is updated for each transaction (credit or debit).
+
+-- Another approaches is to describe how the balance changes over time:
+
+bankAccount openingBal (amt:amts)
+  = openingBal : bankAccount (openingBal + amt) amts
+
+bankAccountEx = take 4 $ bankAccount 0 [-100, 50, 50, 1]
+
+-- In practice the amounts are more likely to be an unbounded stream:
+bankAccountsEx2 = take 4 $ bankAccount 0 (randAmounts getStdGen)
+
+-- Lazy Evil
+
+-- Unfortunately laziness means we cannot know when a list element will be evaluated.
+-- In the presence of side effects this becomes a problem.
+
+-- Monads
+
