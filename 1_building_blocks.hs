@@ -304,4 +304,22 @@ evalEx1 = eval (Div (Lit 44) (Lit 11)) -- 4
 evalEx2 = eval (Lit 42) -- 42
 
 -- This is elegant but does not address real-world problems such as errors.
---
+-- We introduce another data type to address this:
+
+data Try a = Err String | Return a
+
+evalTry :: Expr -> Try Int
+evalTry (Lit a) = Return a
+evalTry (Div a b) = 
+  case (evalTry a) of
+    Err e     -> Err e
+    Return a' -> 
+      case (evalTry b) of
+        Err e     -> Err e
+        Return b' -> divTry a' b'
+
+divTry :: Int -> Int -> Try Int
+divTry a b = if b == 0 then Err "Div by Zero" else Return (div a b)
+
+-- This works but is much more syntactically noisy because we have to explicity deal with errors.
+ 
