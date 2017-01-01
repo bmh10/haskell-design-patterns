@@ -322,4 +322,41 @@ divTry :: Int -> Int -> Try Int
 divTry a b = if b == 0 then Err "Div by Zero" else Return (div a b)
 
 -- This works but is much more syntactically noisy because we have to explicity deal with errors.
- 
+
+-- Using a monad instead:
+
+instance Monad Try where
+  return x = Return x
+  fail msg = Err msg
+
+  Err e    >>= _ = Err e
+  Return a >>= f = f a
+
+evalTry' :: Expr -> Try Int
+evalTry' (Lit a) = Return a
+evalTry' (Div a b) = (evalTry' a) >>= \a' ->
+                       (evalTry' b) >>= \b' ->
+                         divTry a' b'
+
+-- The bind operator (>>=) enables errors propagation.
+-- Whenever an Err is returns, the subsequent part of the bind chain is ignored, propagating the error
+
+-- This can be rewritten to be more friendly looking:
+
+evalTry'' (Lit a) = Return a
+evalTry'' (Div a b)
+ = do
+     a' <- evalTry'' a
+     b' <- evalTry'' b
+     divTry a b
+
+-- The Try data type helped to make failure more explicit. Making it a monad made is easier to work with.
+-- Monads can be used to make many other 'effects' more explicit.
+
+-- The IO monad is particularly useful when dealing with IO operations.
+-- THe idea of Monads is taken from Category theory
+
+-- Composing Monads and structuring programs
+
+
+
