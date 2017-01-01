@@ -291,3 +291,17 @@ bankAccountsEx2 = take 4 $ bankAccount 0 (randAmounts getStdGen)
 
 -- Monads
 
+-- Monad is a typeclass that is best understood by looking from many perspectives.
+
+-- Interpreting expressions example:
+data Expr = Lit Int | Div Expr Expr
+
+eval :: Expr -> Int
+eval (Lit a) = a
+eval (Div a b) = div (eval a) (eval b)
+
+evalEx1 = eval (Div (Lit 44) (Lit 11)) -- 4
+evalEx2 = eval (Lit 42) -- 42
+
+-- This is elegant but does not address real-world problems such as errors.
+--
