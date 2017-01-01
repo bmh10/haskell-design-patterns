@@ -358,5 +358,12 @@ evalTry'' (Div a b)
 
 -- Composing Monads and structuring programs
 
+-- Like functions monads can be combined e.g. monads for failure, IO, logging etc.
+-- Monad composition allows us to create more focused monads that can be recombined in different ways.
+-- Chapter 3 will explore monad transformers and monad stacks in more depth.
 
+-- Summary
 
+-- Explored 3 primary 'glues' in Haskell: functions, type system, and lazy evaluation.
+-- Focussed on composibility of these building blocks -> found that we are also able to decompose, decouple, and modularize our code.
+-- Looking at polymorphism (parametric + ad-hoc)
