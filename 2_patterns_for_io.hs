@@ -1,6 +1,9 @@
 import System.IO
 import Control.Monad
 import Control.Applicative
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Char8 as B8
+import Data.Char (chr)
 
 -- Patterns for I/O
 
@@ -44,5 +47,52 @@ main = do
 -- Monad enables us to compose I/O actions together into seqeunced pipelines.
 -- Applicative and functor allow us to apply functions to I/O actions.
 
+
 -- Imperative I/O
+
+-- Haskell I/O code is purely functional but the style can be imperative:
+
+data Chunk = Chunk {chunk :: String} | LineEnd {chunk :: String, remainder :: String} deriving (Show)
+
+mainImperative = do
+  fileH <- openFile "test.txt" ReadMode
+  loop "" fileH
+  hClose fileH
+  where
+    loop acc h = do
+      isEof <- hIsEOF h
+    if isEof
+      then do putStrLn acc; putStrLn "DONE..."
+      else do
+        chunk <- B.hGet h 8
+        case (parseChunk chunk) of
+          (Chunk chunk') -> do
+            let accLine = acc ++ chunk'
+            loop accLine h
+          (LineEnd chunk' remainder) -> do
+            let line = acc ++ chunk'
+            -- Process line...
+            putStrLn line
+            loop remainder h
+
+parseChunk chunk
+  = if rightS == B8.pack ""
+      then Chunk   (toS leftS)
+      else LineEnd (toS leftS) ((toS . B8.tail) rightS)
+  where
+    (leftS, rightS) = B8.break (== '\n') chunk
+    toS = map (chr . fromEnum) . B.unpack
+
+-- Imperative I/O is also known as 'handle-based I/O'
+
+-- Pros:
+-- Processing is incremental.
+-- Precise control over resources (e.g. open/close files, start long-running processes).
+
+-- Cons:
+-- I/O expressed at low level of abstraction.
+-- Produces code which is not very composable. e.g. above iteration over the file is interleaved with chunk processing.
+-- The traversal state is exposed. We pass the file handle around, check for EOF on each iteration, and must explicity clean up the resource.
+
+-- Lazy I/O
 
