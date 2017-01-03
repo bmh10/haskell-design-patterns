@@ -127,4 +127,13 @@ mainLazy3 = do
   putStrLn (take 10 contents) -- Lazily fetch 10 chars
   hClose h
 
+-- Using the lines function with hGetContents, we get a lazy stream of file lines:
+lineStream h = hGetContents h >>= return . lines
 
+mainLazy4 = do
+  h <- openFile "test.txt" ReadMode
+  lines' <- lineStream h
+  mapM_ putStrLn lines' -- mapM_ f = sequence_ (map f)
+  hClose h
+
+-- mapM captures the common pattern of mapping and sequencing.
