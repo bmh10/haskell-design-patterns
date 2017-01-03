@@ -96,3 +96,35 @@ parseChunk chunk
 
 -- Lazy I/O
 
+-- Of the 3 main 'glues' in Haskell - High Order Functions (HOFs), the type system, and laziness - laziness is the only one which is
+-- not a concrete thing in the language (cannot be seen in the code). Rather it is related to the way the code will be evaluated at runtime.
+
+mainLazy = do
+  -- Lazy IO stream
+  let ios = map putStrLn ["this", "won't", "run"];
+  putStrLn "until ios is seqeunced..."
+  sequence_ ios -- performs actions
+
+-- This discards action results because the (>>) operator discards the results:
+sequence_ :: [IO ()] -> IO ()
+sequence_ = foldr (>>) (return ())
+
+-- The sequence function retains the results:
+mainLazy2 = do
+  h <- openFile "test.txt" ReadMode
+  line1 <- hGetLine h
+  let getLines = [hGetLine h, hGetLine h]
+  [line2, line3] <- sequence getLines
+  hClose h
+  putStrLn line2
+
+-- line1 is read eagerly. line2/3 are only read when sequenced.
+
+-- hGetLine returns a strict string, wheras hGetContents returns a lazy string:
+mainLazy3 = do
+  h <- openFile "test.txt" ReadMode
+  contents <- hGetContents h
+  putStrLn (take 10 contents) -- Lazily fetch 10 chars
+  hClose h
+
+
