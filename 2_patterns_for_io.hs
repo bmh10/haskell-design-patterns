@@ -133,7 +133,18 @@ lineStream h = hGetContents h >>= return . lines
 mainLazy4 = do
   h <- openFile "test.txt" ReadMode
   lines' <- lineStream h
-  mapM_ putStrLn lines' -- mapM_ f = sequence_ (map f)
+  mapM_ putStrLn lines' -- mapM_ f arg = sequence_ (map f arg)
   hClose h
 
 -- mapM captures the common pattern of mapping and sequencing.
+
+-- forM is same as mapM but with reversed arguments. This is useful for passing a 'trailing lambda' function:
+mainLazy5 = do
+  h <- openFile "test.txt" ReadMode
+  lines' <- lineStream h
+  forM_ lines' $ \line -> do
+        let rev = reverse line
+        putStrLn rev
+  hClose h
+
+-- Pg. 30
