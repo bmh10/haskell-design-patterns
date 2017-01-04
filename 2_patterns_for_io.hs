@@ -170,4 +170,24 @@ mainLazy6 = do
   print $ take 10 chunks
 
 -- Consumer:
+processChunk :: String -> [L8.ByteString] -> IO ()
+processChunk acc [] = do putStrLn acc -- terminate recursion
+processChunk = processChunk' ""
 
+processChunk' acc (chunk:chunks)
+ = case (parseChunk chunk) of
+   (Chunk chunk') -> do
+     processChunk' (acc ++ chunk') chunks
+   (LineEnd chunk' remainder) -> do
+     let line = acc + chunk'
+     putStrLn line -- process line
+     processChunk' remainder chunks
+
+-- ProcessChunk recursively consumes our stream and accumulates chunks into lines. It is tail recursive and uses constant space.
+
+mainLazy7 = do
+  h <- openFile "test.txt" ReadMode
+  chunkStream h >>= processChunk -- producer and consumer are decoupled
+  hClose h
+
+--Pg 31
