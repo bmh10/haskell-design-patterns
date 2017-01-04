@@ -3,6 +3,8 @@ import Control.Monad
 import Control.Applicative
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as B8
+import qualified Data.ByteString.Lazy as LB
+import qualified Data.ByteString.Lazy.Char8 as LB8
 import Data.Char (chr)
 
 -- Patterns for I/O
@@ -147,4 +149,25 @@ mainLazy5 = do
         putStrLn rev
   hClose h
 
--- Pg. 30
+-- When performing I/O we must make the distinction between I/O actions and performing an I/O action.
+-- Also need to know the lazy/strict characteristic of the functions we are working with e.g. hGetLine vs hGetContents
+
+-- We rewrite the imperative chunking code from before using lazy I/O style:
+chunkStream :: Handle -> IO [L8.ByteString]
+chunkStream h
+ = do
+   isEof <- hIsEOF h
+   if isEof
+     then return []
+   else do
+     chunk <- LB.hGet h 8
+     rest <- (chunkStream h)
+     return (chunk:rest)
+
+-- We can now produce a stream and consume it
+mainLazy6 = do
+  chunks <- chunkStream h
+  print $ take 10 chunks
+
+-- Consumer:
+
