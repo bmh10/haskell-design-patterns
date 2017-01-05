@@ -190,4 +190,27 @@ mainLazy7 = do
   chunkStream h >>= processChunk -- producer and consumer are decoupled
   hClose h
 
---Pg 31
+-- In the imperative example, loop function drives the iteration through the chunks and consumer was not explicit.
+
+-- processChunk method is an I/O action with side effects - as it loops through the file chunks, it accumulates chunks until it has captured a whole line. It then does some I/O with the line and starts accumulating chunks for the next line.
+
+-- Iteration and I/O processing are therefore interleaved.
+-- We can decouple this further by making a pure lineStream function that produces a stream of lines:
+
+toLines = lineStream ""
+
+lineStream accChunks [] = [accChunks]
+lineStream accCHunks (chunk:chunks)
+ = case (parseChunk chunk) of
+   (Chunk chunk')             -> lineStream (accChunks ++ chunk') chunks
+   (LineEnd chunk' remainder) -> (accChunks ++ chunk') : (lineStream remainder chunks)
+
+-- ChunkSteam can now be passed into the toLines function:
+mainLazy8 = do
+  h <- openFile "test.txt" ReadMode
+  lines' <- liftM toLines (chunkStream h)
+  mapM_ putStrLn lines'
+  hClose h
+
+
+
