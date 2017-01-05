@@ -212,5 +212,34 @@ mainLazy8 = do
   mapM_ putStrLn lines'
   hClose h
 
+-- toLines -> pure function
+-- chunkStream -> stream wrapped in I/O monad
+-- liftM is therefore used to lift the toLines function into the Monad.
+-- Alternative:
+--   chunks <- (chunkStream h)
+--   let lines' = toLines chunks
+
+-- It is only when mapM_ putStrLn lines' is called that the stream toLines materializes, which drives the evaluation of chunkStream.
+-- Underneath the mapM_ function, the sequence_ function drives the evaluation of the stream.
+
+mainLazy9 = 
+  h <- openFile "test.txt" ReadMode
+  lines' <- hGetContents h >>= return . Lines
+  mapM putStrLn lines'
+  hClose h
+
+-- Here we composed pure functional streams with I/O streams using monadic operators and functions.
+
+-- Pros of Lazy I/O:
+-- I/O expressed at relatively high level of abstraction
+-- Very composable, enabling decoupling of producers from consumers
+
+-- Cons of Lazy I/O:
+-- Poor control over when something is evaluated
+-- Poor control of resources
+
+-- The Problems with Lazy I/O
+
+
 
 
