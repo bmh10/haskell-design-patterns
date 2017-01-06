@@ -240,6 +240,24 @@ mainLazy9 =
 
 -- The Problems with Lazy I/O
 
+mainLazy10 = do
+  h <- openFile "test.txt" ReadMode
+  firstLine <- hGetLine h     -- returns string immediately
+  contents  <- hGetContents h -- returns a promise
+  hClose h
+  print $ words firstLine -- prints the string
+  print $ words contents  -- prints nothing (live stream closed when hClose is called)
+
+-- Some problems with Lazy I/O:
+-- 1. Order of side effects is tied to order of lazy evaluation. Because order of lazy evaluation if not explicit, the order of effects also isn't.
+-- 2. Can be difficult to reason about space requirements of a lazy program.
+-- 3. Poor resource management and lack of explicit order of effects can make it difficult to know when to clean up resources.
+
+-- Lazy I/O is good for simple situations, where space requirements and order of execution are fairly predictable.
+-- However when we need precise resource management or predictable space usage, lazy I/O is not an option.
+
+-- Resource management with bracket
+
 
 
 
