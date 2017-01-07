@@ -294,3 +294,15 @@ where
           -> IO c         -- result
 
 -- The finally function is a special form of bracket:
+finally :: IO a -- main action
+        -> IO b -- final action - runs afterwards
+        -> IO b -- result
+
+-- bracket functions help us to clean up resources more reliably but do not definitively solve
+-- the problem of closing resources in a timely manner
+
+-- If we require more precise resource management, control of space requirements, and control of ordering of effects,
+-- then we must use Iteratee I/O
+
+
+-- Iteratee I/O
