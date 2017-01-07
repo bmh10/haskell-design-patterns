@@ -258,6 +258,39 @@ mainLazy10 = do
 
 -- Resource management with bracket
 
+-- Examples so far have used explicit resource management:
+mainLazy11 = do
+  h <- openFile "test.txt" ReadMode
+  useResource h
+  hClose h
+  where
+    useResource h' = (stream h') >>= mapM_ putStrLn
+    stream h'      = hGetContents h' >>= return . lines
 
+-- We can use higher level abstractions to capture this common pattern.
+-- Simplest is just to ignore the problem and let the garbage collector clean up (not a good idea):
+mainLazy12 = do
+  contents <- readFile "test.txt"
+  mapM_ putStrLn (lines contents)
 
+-- A more idiomatic approach is to use the withFile wrapper function:
+mainLazy13 = do
+  withFile "test.txt" ReadMode enumerateLines
+  where
+    enumerateLines h = lines' h >>= mapM_ putStrLn
+    lines' h' = hGetContents h' >>= return . lines
 
+-- withFile decouples producer from consumer and gives better control over resource management.
+-- The file will be closed in case of completion or error because withFile makes use of the bracket function:
+
+bracket
+  (openFile "filename" ReadMode) -- acquire resource
+  hClose                         -- release resource
+  (\h -> "do some work")         -- action function
+where
+  bracket :: IO a         -- before action
+          -> (a -> IO b)  -- after action
+          -> (a -> IO c)  -- do action
+          -> IO c         -- result
+
+-- The finally function is a special form of bracket:
