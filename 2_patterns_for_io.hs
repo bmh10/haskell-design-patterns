@@ -339,3 +339,12 @@ instance Show IterResult where
   show (HaveLine l r) = "HaveLine " ++ l ++ "|" ++ r
   show (NeedChunk _)  = "NeedChunk"
 
+-- The HaveLine function simply returns some date fields, but the NeedChunk function is not so simple:
+-- NeedChunk (String -> IterResult)
+-- Instead of returning a value, NeedChunk returns an Iter function i.e. another step function.
+-- This is the basis of Iteratee I/O: a step function can return another step function
+
+-- Iteratee
+
+-- Next we write an Iter function:
+
