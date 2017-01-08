@@ -306,3 +306,30 @@ finally :: IO a -- main action
 
 
 -- Iteratee I/O
+
+-- Iteratee I/O combines the precise resource management and space requirements of Handle-based I/O with the decoupling of
+-- producers and consumers possible with lazy I/O.
+
+-- Using previous example:
+data Chunk' = Chunk' {chunk :: String} | LineEnd' {chunk :: String, remainder :: String}
+
+parseChunk' :: ByteString -> Chunk'
+parseChunk' chunk
+ = if rightS == B8.pack ""
+     then Chunk'   (toS leftS)
+     else LineEnd' (toS leftS) ((toS . B8.tail) rightS)
+   where
+     (leftS, rightS) = B8.break (== '\n') chunk
+
+toS = map (chr . fromEnum) . B.unpack
+
+-- We model the iteration step as a function that processes a file chunk and returns an IterResult value:
+-- iterF :: String -> IterResult
+
+-- N.B. newtype == data keyword except with newtype there must be exactly one constructor with exactly one field inside it.
+-- This type represents the concept of an 'iteratee':
+newtype Iter = Iter {runIter :: B8.ByteString -> IterResult}
+
+
+
+
