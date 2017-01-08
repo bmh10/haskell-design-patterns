@@ -330,6 +330,12 @@ toS = map (chr . fromEnum) . B.unpack
 -- This type represents the concept of an 'iteratee':
 newtype Iter = Iter {runIter :: B8.ByteString -> IterResult}
 
+-- The IterResult can indicate 2 possibilities, HaveChunk and NeedChunk:
+data IterResult
+ = HaveLine {line :: String, residual :: String} -- a line has been accumulated (with possible residual)
+ | NeedChunk Iter -- need more chunk data
 
-
+instance Show IterResult where
+  show (HaveLine l r) = "HaveLine " ++ l ++ "|" ++ r
+  show (NeedChunk _)  = "NeedChunk"
 
