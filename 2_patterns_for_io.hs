@@ -348,3 +348,26 @@ instance Show IterResult where
 
 -- Next we write an Iter function:
 
+chunkIter :: Iter
+chunkIter = Iter (go "")
+  where
+    go :: String -> B8.ByteString -> IterResult
+    go acc chunk =
+      case (parseChunk chunk) of
+        (Chunk chunk')             -> NeedChunk (Iter (go (acc + chunk')))
+        (LineEnd chunk' residual') -> HaveLine (add ++ chunk') residual'
+
+-- Note we curry go with the acc parameter so that we get the correct Iter type signature: B8.ByteString -> IterResult
+
+-- Below the first run of chunkIter returns NeedChunk. This lets the caller know that another iteration should be performed.
+-- The iteratee provides us with the next iteratee to run (which internally knows about the chunks accumulated so far):
+mainLazy14 = do
+  h <- openFile "test.txt" ReadMode
+  chunk1 <- B.hGet h 25
+  let (NeedChunk iter1) = runIter chunkIter chunk1 
+
+  chunk2 <- B.hGet h 25
+  let (HaveLine line residual) = runIter iter1 chunk2
+  putStrLn line
+
+-- Enumerator
