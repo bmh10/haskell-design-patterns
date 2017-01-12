@@ -371,3 +371,38 @@ mainLazy14 = do
   putStrLn line
 
 -- Enumerator
+
+enumerateFile path initIter =
+  withFile path ReadMode $ \n ->
+    let
+      go iter = do
+        isEOF <- hIsEOF h
+        if isEOF
+          then return (HaveLine "End Of File" "")
+          else do
+            chunk <- B.hGet h 8
+            check $ runIter iter chunk
+
+      check (NeedChunk iterNext) = go iterNext
+      check (HaveLine line residual)
+        = do
+            putStrLn line
+            check $ runIter initIter (B8.pack residual)
+            in go initIter
+
+mainLaxy15 = do enumerateFile "test.txt" chunkIter
+
+-- Enumerator has type:
+enumerateFile :: FilePath -> Iter -> IO IterResult
+
+-- If we apply the first argument to enumerateFile we get: (enumerateFile file) :: Iter -> IO IterResult
+type Enumerator = Iter -> IO IterResult
+
+-- Therefore -> enumerateFile :: FilePath -> Enumerator
+
+-- Enumerators work like folds. They apply a function (with an accumulator) element by element over an input stream.
+
+
+-- Generalized iteratees, enumerators, and enumeratees
+
+     
