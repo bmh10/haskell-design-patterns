@@ -453,3 +453,23 @@ data IterResult
 -- Conduit - Michael Snoyman - focus on deterministic resource management
 
 -- Comparing 3 styles of I/O
+
+-- Handle based I/O:
+--   Strict & incremental processing
+--   Evaluation driven by looping code
+--   Low abstraction level
+--   Precise resource management
+
+-- Lazy I/O:
+--   Lazy processing
+--   Evaluation driven by stream consumer
+--   High abstraction level
+--   No precise resource management
+
+-- Iteratee I/O:
+--   Strict & incremental processing
+--   Evaluation driven by enumerator & iterator
+--   High abstraction level
+--   Precise resource management
+
+-- Summary
