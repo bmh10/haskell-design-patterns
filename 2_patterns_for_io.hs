@@ -471,5 +471,3 @@ data IterResult
 --   Evaluation driven by enumerator & iterator
 --   High abstraction level
 --   Precise resource management
-
--- Summary
