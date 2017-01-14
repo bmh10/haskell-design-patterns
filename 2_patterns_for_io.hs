@@ -405,4 +405,39 @@ type Enumerator = Iter -> IO IterResult
 
 -- Generalized iteratees, enumerators, and enumeratees
 
-     
+-- Our current code is still along way from being a robust and composable Iteratee I/O.
+
+-- Currently the last line of the file is lost. To solve we replace ByteString with:
+
+data IterInput = Chunk' String | EndOfFile
+
+-- At the EOF the enumerator can pass in the EndOfFile to the iteratee and ask it to return the last line as a HaveLine function.
+
+-- To deal with failure:
+
+data IterResult
+  = HaveLine {line :: String, residual :: String}
+  | NeedChunk Iter
+  | Failure {errMsg :: String}
+
+-- The iteratee and enumerator types should also be generalised by parameterising our types.
+
+-- In order to compose iteratees and enumerators, we need to make them implement the monad type class.
+
+-- We also need the enumeratee's abstractions that enable transforming the output of an enumerator or iteratee and feeding that into another iteratee.
+
+-- Iteratees produce data.
+-- Enumeratees serve as pipeline transformers of data.
+-- Enumerators consume data and drive the pipeline process.
+
+-- The iteratee can also influence evaluation by signalling:
+--    When it has finished processing
+--    When it needs more data
+--    When it can yield a result
+--    When it encounters a failure
+
+-- This flexibility means that resource management in the face of exceptions becomes much more traceable than with Lazy I/O.
+-- Resource management can also be abstracted at a much higher level than Handle-based I/O.
+
+-- The Iteratee I/O libraries
+
