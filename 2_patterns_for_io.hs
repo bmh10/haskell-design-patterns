@@ -441,3 +441,15 @@ data IterResult
 
 -- The Iteratee I/O libraries
 
+-- Iteratee libraries vary widely in how they model types for iteratees, enumerators, and enumeratees.
+-- The meaning and necessity of enumeratees varies between libraries.
+-- The types of signals the iteratee can send back to the consumer also differ.
+
+-- Some libraries:
+-- IterateeM/CPS - Oleg Kiselyov - early groundword
+-- Iteratee - John Lato + Oleg Kiselyov - clarified key concepts
+-- Enumerator + iterIO - John Millikin - simplified mental model
+-- Pipes - Gabriel Gonzales - focus on preserving equational reasoning
+-- Conduit - Michael Snoyman - focus on deterministic resource management
+
+-- Comparing 3 styles of I/O
