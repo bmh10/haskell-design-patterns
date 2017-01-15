@@ -38,3 +38,27 @@ b = fmap show (Just' 7)
 -- It also lifts function composition to the level of functors.
 -- Described by Functor laws:
 
+-- Law of Composition
+-- fmap (f . g) == fmap f . fmap g
+
+-- e.g. fmap (f . read) getLine == (fmap f) . (fmap read) $ getLine
+
+-- Identity Law
+-- fmap id == id
+-- e.g. fmap id (Just 1) = id (Just 1)
+
+-- fmap is to Functor what map is to the List type:
+
+ns  = map  (^2) [1,2,3]
+ns' = fmap (^2) [1,2,3]
+
+-- This works because List if a Functor:
+
+-- instance Functor List where
+--   fmap = map
+
+-- The Functor class abstracts the idea of function application to a single argument.
+-- It gives us a way of combining functions with types by lifting a function from one level of abstraction to another.
+
+-- Applicative Functor
+
