@@ -104,4 +104,29 @@ Just' (2,3)
 -- Currying of the lower-level function (,) leads to currying on the Applicative level.
 -- Function composition on the lower level is also preserved at the applicative level.
 
--- The law of composition of Applicative Functor:
+-- The law of composition of Applicative Functor (where . is function composition operator):
+
+pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+
+-- When we combine 2 Applicatives with the <*> operator, we always get another Applicative.
+-- It is said the Applicatives are therefore "closed under composition".
+
+-- Since Applicative is a Functor we can use the fmap function:
+
+pure (,) <*> Just' 2 <*> Just' 3
+-- same as:
+(fmap (,) (Just 2))  <*> Just' 3
+((,) <$> (Just 2))   <*> Just' 3
+-- same as:
+(,) <$> (Just 2)     <*> Just' 3
+
+-- where <$> is infix synonym for fmap.
+
+-- Applicative provides us with a multiparameter fmap function.
+-- <*> operator is more generic (than <$>) and uniformly lifts function application to the Functor level:
+
+fmap, (<$>) ::   (a -> b) -> f a -> f b
+(<*>)       :: f (a -> b) -> f a -> f b
+
+-- Monad
+
