@@ -60,5 +60,48 @@ ns' = fmap (^2) [1,2,3]
 -- The Functor class abstracts the idea of function application to a single argument.
 -- It gives us a way of combining functions with types by lifting a function from one level of abstraction to another.
 
+
 -- Applicative Functor
 
+-- Because Maybe is a Functor we can lift the (+2) function so that it can be applied directly to a Maybe value:
+-- e.g. fmap (+2) (Just 3)
+
+-- However fmap does not allow us to apply a function to multiple Functor values i.e. fmap (+) (Just 2) (Just 3)
+
+-- For this we need the Applicative Functor class. It enabled us to raise a function to act on multiple Functor values:
+-- Applicative inherits from Functor
+class (Functor f) => Applicative f where
+  pure  :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+
+-- pure function lifts a value into the Functor class
+-- <*> operator generalizes function application to the Functor class (hence 'applicative functor')
+
+-- Lets make Maybe' an instance of Applicative:
+
+data Maybe' a = Just' a | Nothing' deriving (Show)
+
+instance Functor Maybe' where
+fmap _ Nothing'  = Nothing'
+fmap f (Just' x) = Just' (f x)
+
+instance Applicative Maybe' where
+  pure f = Just' f
+  Nothing'  <*> _         = Nothing'
+  _         <*> Nothing'  = Nothing'
+  (Just' f) <*> (Just' x) = Just' (f x)
+
+--e.g:
+
+pure (,) <*> Just' 2 <*> Just' 3
+-- evals as:
+Just' (,) <*> Just' 2 <*> Just' 3
+Just' ((,) 2)         <*> Just' 3
+Just' ((,) 2 3)
+Just' (2,3)
+
+
+-- Currying of the lower-level function (,) leads to currying on the Applicative level.
+-- Function composition on the lower level is also preserved at the applicative level.
+
+-- The law of composition of Applicative Functor:
