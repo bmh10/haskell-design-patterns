@@ -164,3 +164,36 @@ Just' "10"
 -- It is not quite that simple.
 
 -- Monad as Functor
+
+-- We can change Monad to the Functor class using the 'liftM' function, monadic version of fmap:
+
+instance Functor Monad where
+  fmap = liftM
+  where
+    liftM :: Monad   m => (a -> b) -> m a -> m b
+    fmap  :: Functor m => (a -> b) -> m a -> m b
+
+-- Levels of Functor-like behaviour:
+
+main = do
+  print $ fmap (*2) (Just' 10)     -- Functor
+  print $ pure (*2) <*> (Just' 10) -- Applicative
+  print $ liftM (*2) (Just' 10)    -- Monad
+
+-- Monad liftM function is based on bind operator:
+
+liftM f m = m >>= return . f
+
+-- or:
+liftM f m = do
+  val <- m        -- extract value of Monad m
+  return (f val)  -- pass value to Monadic function f and wrap/lift result into Monad
+
+-- e.g.
+liftM (*2) (Just' 10)
+= (Just' 10) >>= return . (*2) -- using liftM definition
+= return . (*2) 10             -- extract value of (Just' 10) Monad and apply Monadic function
+= return 20      
+= Just' 20                     -- wrap/lift result into Monad
+
+
