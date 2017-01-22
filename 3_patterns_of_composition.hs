@@ -142,5 +142,25 @@ class (Applicative m) => Monad m where
 -- The Monadic function acts on type a of the first monad and returns a new monad of type (m b).
 
 -- Lets make Maybe' a Monad class:
+data Maybe' a = Just' a | Nothing' deriving (Show)
 
- 
+instance Functor Maybe' where ...
+instance Applicative Maybe' where ...
+
+instance Monad Maybe' where
+  return x = Just' x
+  Nothing'  >>= _ = Nothing' -- Given Nothing', ignore the monadic function, and return Nothing'
+  (Just' x) >>= f = (f x)    -- Given Just' x, apply the monadic function to the value x. This will return a Maybe' monad.
+
+-- Example:
+
+-- monad >>= monadic function
+Just' 10 >>= \x -> Just' (show x)
+-- evals to:
+(\x -> Just' (show x)) 10
+Just' "10"
+
+-- At first it seems that bind simply allows us to combine monads with monadic functions.
+-- It is not quite that simple.
+
+-- Monad as Functor
