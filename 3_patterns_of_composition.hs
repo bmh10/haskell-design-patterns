@@ -130,3 +130,17 @@ fmap, (<$>) ::   (a -> b) -> f a -> f b
 
 -- Monad
 
+-- Monad inherits from Applicative:
+
+class (Applicative m) => Monad m where
+  return :: a -> m a
+  (>>=) :: m a -> (a -> m b) -> m b
+
+-- return is like the pure function from Applicative. It wraps a value in a Monad class.
+
+-- The bind (>>=) operator combines a Monad (m a) with a Monadic function (a -> m b).
+-- The Monadic function acts on type a of the first monad and returns a new monad of type (m b).
+
+-- Lets make Maybe' a Monad class:
+
+ 
