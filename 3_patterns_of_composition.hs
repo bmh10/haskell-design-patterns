@@ -196,4 +196,47 @@ liftM (*2) (Just' 10)
 = return 20      
 = Just' 20                     -- wrap/lift result into Monad
 
+-- Monad as applicative
+
+-- Applicatives can lift functions with many arguments.
+-- Monads can also do this less elegantly with liftM functions e.g. liftM2, liftM3, ...
+
+main = do
+  print $ (<$>)  (*) (Just' 10) <*> (Just' 20) -- Applicative
+  print $ liftM2 (*) (Just' 10)     (JUst' 20) -- Monad
+
+-- Any monad is also an applicative functor:
+
+-- ap_ defines <*> for Monads
+-- 'ap' stands for 'applicative pattern'
+ap_ mf mx = do
+  f <- mf      -- extract function
+  x <- mx      -- extract val
+  return (f x)
+
+-- We extract the function from the first Monad and the value from the second.
+-- We then do function application (this function is already in Control.Monad.ap).
+
+-- Now we can write monadic code in applicative style:
+(Just' (*)) 'ap_' (Just' 10) 'ap_' (Just' 20)
+
+-- We can easily make Monad an instance of Applicative:
+
+instance Applicative Monad where
+  pure = return
+  (<*>) = ap_
+
+-- The applicative pattern was only reconginzed in 2008.
+-- This is why there a several ways of donig the same thing:
+
+-- Functor   Applicative   Monad
+-- fmap      pure, <*>     liftM
+--           <*>           ap
+--           pure          return
+
+-- These discrepancies were resolved by the "Functor-Applicative Monad Proposal"
+-- See https://wiki.haskell.org/Functor-Applicative-Monad_Proposal
+
+
+-- Sequencing actions with Monad and Applicative
 
