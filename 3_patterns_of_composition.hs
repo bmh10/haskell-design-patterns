@@ -240,3 +240,31 @@ instance Applicative Monad where
 
 -- Sequencing actions with Monad and Applicative
 
+-- Monad can sequence actions:
+
+action s = do putStrLn s; return s
+main = do
+  let actions = map action ["parts", "are", "disconnected"]
+  sequence' actions
+  return ()
+
+-- sequence' performs actions one after the other:
+sequence' [] = return []
+sequence' (x:xs) = do
+  x'  <- x            -- action performed
+  xs' <- sequence' xs
+  return (x':xs')
+
+-- We can also sequence actions with Applicative:
+sequenceA [] = pure []
+sequenceA (x:xs) = (:) <$> x <*> (sequence xs)
+
+-- Part of the Functor-Applicative-Monad proposal is to change the prelude's sequence function
+-- to require applicative instead of monad.
+
+-- Applicative can sequence actions that happen in isolation i.e. each stage does not rely on results of previous stage.
+-- However, when actions need to communicate results to subsequent actions, Monad is required.
+
+
+-- Monads and the Bind Chain
+
