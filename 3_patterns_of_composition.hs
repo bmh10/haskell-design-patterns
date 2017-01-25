@@ -290,11 +290,31 @@ mainLoop = do
       putStrLn $ "You said " ++ line -- action 2c
       mainLoop
 
+
 -- Note that Applicative does allow for limited communication between actions e.g.
 (+) <$> Nothing <*> Just 10 <*> Just 20
 
 -- Here Nothing will prevent all subsequent actions from being performed.
 -- Communication between actions is baked into the Maybe Applicative type instance.
+
+
+-- While working with the Reader Monad earlier, we saw that we can use the bind chain to provide a "shared context" between actions in a sequence.
+-- Can use shared context to do "out of band" processing -> processing that is explicit in the bind chain but implicit from the perspective
+-- of the chain of monadic actions.
+-- e.g. in the Reader Monad the reader state is out of band i.e. independent of the monadic pipeline.
+-- This is the reason we can use monads to approximate imperative programming.
+
+-- We can also view the bind chain as a more sophisticated version of an accumulator argument in a tail recursive function.
+-- Accumulator arguments allow for a shared context in a nested chain of recursive function calls.
+-- Monads bind in a way that includes an "accumulator".
+
+-- Bind (>>=) operator composes Monad values with monadic functions (functions that return a value embedded in a Monad class).
+
+-- Monads are not "closed under composition" like Applicatives. Monads generally don't compose into Monads.
+
+
+-- Composing with monads
+
 
 
 
