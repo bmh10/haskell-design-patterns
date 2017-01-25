@@ -268,3 +268,33 @@ sequenceA (x:xs) = (:) <$> x <*> (sequence xs)
 
 -- Monads and the Bind Chain
 
+-- With Monads we can build a chain of actions such that an action can communicate with subsequent actions.
+
+-- For example, the following can be expressed using Monads but not with Applicative:
+
+main = do
+  line <- getLine                -- action 1
+  putStrLn $ "You said " ++ line -- action 2 (uses result of action 1)
+
+-- Bind (>>=) lets us bind outputs to inputs, whereas with Applicative (<*>) each action is performed in isolation.
+
+-- This also means that with Monads we can have a dynamic sequence of actions, where an action's outcome can affect
+-- which action is executed next e.g.
+
+main = mainLoop
+mainLoop = do
+  line <- getLine -- action 1
+  if line == "stop"
+    then putStrLn "Bye" -- action 2b
+    else do
+      putStrLn $ "You said " ++ line -- action 2c
+      mainLoop
+
+-- Note that Applicative does allow for limited communication between actions e.g.
+(+) <$> Nothing <*> Just 10 <*> Just 20
+
+-- Here Nothing will prevent all subsequent actions from being performed.
+-- Communication between actions is baked into the Maybe Applicative type instance.
+
+
+
