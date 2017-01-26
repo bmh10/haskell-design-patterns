@@ -330,7 +330,31 @@ gm <=< fM = \x -> (fM x) >>= gM
 -- The key composition is binding (>>=) the monad with a monadic function.
 -- Beyond that monads don't compose as well as applicatives.
 
+
 -- Monad Transformers
+
+-- We look at combining different types of monads into more powerful combinations.
+-- This can be done by creating "Monad stacks".
+
+-- We start with a Reader Monad to hold some configuration data for an application:
+
+data Config = Config {discountRate :: Float, currentSym :: String}
+
+appCfg = (Config 10 "R")
+
+-- dicount function takes a Float and returns a Float in the context of a Reader Config:
+
+discount :: Float -> Reader Config Float
+discount amt = do
+  discountRate' <- asks discountRate
+  return (amt * (1 - discountRate' / 100))
+
+-- From within the function, we ask for the config data.
+
+main = do
+  print $ runReader (discount 100) appCfg
+
+-- Lets add a display function in the context of Reader Config:
 
 
 
