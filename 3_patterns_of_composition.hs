@@ -356,5 +356,36 @@ main = do
 
 -- Lets add a display function in the context of Reader Config:
 
+display :: Float -> Reader Config String
+display amt = do
+  currencySym' <- asks currencySym
+  return (currencySym' ++ " " ++ (show amt))
+
+main = d0
+  putStrLn $ runReader doDoubleDiscount appCfg
+where doDoubleDiscount
+ = (discount 100 >>= discount >>= display)
+
+-- Here we have a chain of monadic functinos executing in the context of Reader Config.
+-- To add logging capability to our Reader functions, we can stack our Reader type on top of a Writer Monad.
+
+-- ReaderT type is a Reader Monad that also takes an inner Monad, in this case Writer String.
+
+discountWR :: Float -> ReaderT Config (Writer String) Float
+discountWR amt = do
+  discountRate' <- asks discountRate
+  let discounted = amt * (1 - discountRate' / 100)
+  tell $ "-Discount " ++ (show amt) ++ " = " ++ (show discounted)
+  return discounted
+
+displayWR :: Float -> ReaderT Config (Writer String) String
+displayWR amt = do
+  currencySym' <- asks currencySym
+  tell " > Displaying..."
+  return (currencySym' ++ " " ++ (show amt))
+
+main = do
+  print $ runWriter (runReaderT doDoubleDiscount appCfg)
+  where doDoubleDiscount = (discountWR 100 >>= discountWR >>= displayWR)
 
 
