@@ -315,6 +315,22 @@ mainLoop = do
 
 -- Composing with monads
 
+-- We can compose pure functions with Monads:
+liftM* f m -- returns another Monad m
+
+-- We can compose monadic functions with Monads:
+m >>= fM >>= gM >>= hM
+
+-- We can compose monadic functions with each other:
+gm <=< fM
+
+-- <=< is syntactic sugar for:
+gm <=< fM = \x -> (fM x) >>= gM
+
+-- The key composition is binding (>>=) the monad with a monadic function.
+-- Beyond that monads don't compose as well as applicatives.
+
+-- Monad Transformers
 
 
 
