@@ -420,4 +420,29 @@ newtype App a = App {runApp :: ReaderT Config (Writer String) a}
 
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
+-- Reader & ReaderT both implement MonadReader
+-- Writer & WriterT both implement MonadWriter
+
+-- The effect of this is to flatten out nested Monad stack, so that all lower-level functions are
+-- available at the top-level. e.g. we can call tell and asks as if they were defined on the App monad level.
+
+-- Without this we would have to lift the nested Monad funtion for each level of the stack until reaching the monad
+-- with the function we want to use. The flattening of nested monads lets us avoid nested lifting.
+
+-- Downside is that this practical simplification is precisely what makes defining your own Monad transformers tedious.
+-- Some packages have tried to solve this, see: 'extensible-effects' and 'layers'.
+
+-- Using newtype also has the advantage that we can limit what we export from our code and therefore hide any details
+-- we don't want to expose.
+
+-- However, in doApp we now need to use the runApp function:
+
+doApp :: App a -> (a, String)
+doApp app = runWriter (runReaderT (runApp app) appCfg)
+
+main = do
+  print $ doApp doDoubleDiscount
+  where doDoubleDiscount = (discountWR 100 >>= discountWR >>= displayWR)
+
+-- IO in monad stacks
 
