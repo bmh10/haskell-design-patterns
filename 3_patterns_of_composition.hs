@@ -402,4 +402,22 @@ type App = ReaderT Config (Writer String)
 discountWR :: Float -> App Float
 displayWR  :: Float -> App String
 
+-- We can now define a doApp function:
+
+doApp :: App a -> (a, String)
+doApp app = runWriter (runReaderT app appCfg)
+
+main = do
+  print $ doApp doDoubleDiscount
+  where doDoubleDiscount = (discountWR 100 >>= discountWR >>= displayWR)
+
+-- More idiomatically we can use the newtype method:
+
+newtype App a = App {runApp :: ReaderT Config (Writer String) a}
+  deriving (Monad, MonadReader Config, MonadWriter String)
+
+-- The 'deriving' clause requires a language pragma at the top of the file:
+
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 
