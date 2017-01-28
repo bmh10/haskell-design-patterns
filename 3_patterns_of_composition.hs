@@ -388,4 +388,18 @@ main = do
   print $ runWriter (runReaderT doDoubleDiscount appCfg)
   where doDoubleDiscount = (discountWR 100 >>= discountWR >>= displayWR)
 
+-- We first user runReaderT, which unwraps the Reader Monad and gives us the result.
+-- The Reader function's result in the inner Writer Monad, which is unwrapped using runWriter.
+
+-- Note that Monad stack are unwrapped in reverse order of their wrapping.
+
+-- In order to simplify things we can introduce:
+
+type App = ReaderT Config (Writer String)
+
+-- The types then become:
+
+discountWR :: Float -> App Float
+displayWR  :: Float -> App String
+
 
