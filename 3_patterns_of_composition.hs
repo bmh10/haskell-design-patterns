@@ -446,3 +446,40 @@ main = do
 
 -- IO in monad stacks
 
+-- We can add the IO Monad to our stack. The IO Monad is a special case:
+
+newtype AppIO a = AppIO {runAppIO :: ReaderT Config (WriterT String IO) a
+                  deriving (Monad, MonadReader Config, MonadWriter String, MonadIO)}
+
+-- Instead of Writer String we use WriterT String IO. i.e. Writer Monad wrapping IO.
+
+discountWRIO :: Float -> AppIO Float
+displayWRIO  :: Float -> AppIO String
+
+doAppIO :: AppIO a -> IO (a, String)
+doAppIO app = runWriterT (runReaderT (runAppIO app) appCfg)
+
+-- doAppIO returns previous result wrapped in IO action.
+-- runWriterT is used to extract the writer result
+
+-- Now we can do IO operations in our Monad stack functions, using liftIO to expose the IO Monad:
+
+discountWRIO amt = do
+  liftIO $ putStrLn "We're doing IO!"
+  discountRate' <- asks discountRate
+  let discounted = amt * (1 - discountRate' / 100)
+  tell $ " > Discounting " ++ (show amt) ++ " = " ++ (show discounted)
+  return discounted
+
+displayWRIO amt = do
+  liftIO $ "More IO!"
+  currencySym' <- asks currencySym
+  tell " > Displaying..."
+  return (currencySym' ++ " " ++ (show amt))
+
+main = do
+  print <$> doAppIO doDoubleDiscount
+  where doDoubleDiscount = (discountWRIO 100 >>= discountWRIO >>= displayWRIO)
+
+-- Sequence of stack composition
+
