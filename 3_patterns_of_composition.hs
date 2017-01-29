@@ -483,3 +483,14 @@ main = do
 
 -- Sequence of stack composition
 
+-- A Monad stack implies a sequence of composition of Monads.
+-- Unwrapping always done is opposite order to wrapping.
+-- With Reader and Writer Monads the order is inconsequential since they do not affect each other in the stack.
+-- However, if one monad relies on the work of a previous monad being done, the order matters.
+
+-- The IO monad is a sepcial case and must remain at the bottom of the stack.
+
+
+-- Arrows
+
+
