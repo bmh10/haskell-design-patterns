@@ -493,4 +493,27 @@ main = do
 
 -- Arrows
 
+-- Lets look at Arrows from the perspective of Monads. Consider:
 
+import System.IO
+main = do
+  liftM (length . words)
+        (readFile "jabberwocky.txt") >>= print
+
+-- regular functions: length, words
+-- monadic functions: readFile, print
+
+-- liftM lifts the composed function length . words into the monadic function readFile, which is then fed into the result of another monadic function print. 
+
+-- Regular functions can be composed with (.) but we cannot do the following:
+print . length . words . readFile "jabberwocky.txt" -- invalid
+
+-- However we can make this possible.
+
+-- Our approach requires the creation of a "meta type" to represent monadic IO functions.
+-- We then define composition for that type.
+
+data IOF a b = IOF {runIOF :: a -> IO b}
+
+-- IOF wraps a function (a -> IO b) and places the input and output types (a and b) on equal footing, while also hiding the IO monad.
+-- 
