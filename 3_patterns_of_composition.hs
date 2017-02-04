@@ -516,4 +516,23 @@ print . length . words . readFile "jabberwocky.txt" -- invalid
 data IOF a b = IOF {runIOF :: a -> IO b}
 
 -- IOF wraps a function (a -> IO b) and places the input and output types (a and b) on equal footing, while also hiding the IO monad.
--- 
+-- We define our own composition operator:
+(<<<<) :: IOF a b -> IOF c a -> IOF c b
+(IOF f) <<<< (IOF g) = IOF $ f <=< g
+
+-- The function takes 2 IO functions, composes them, and wraps the resulting IO function.
+
+-- Finally we need a function to lift a Monadic IO function into an IOF variable:
+
+lift' :: (a -> b) -> IOF a b
+lift' f = IOF $ return . f -- uses IO Monad's return
+
+-- Now we can compose regular and IO functions:
+main = do
+  let f = IOF print <<<< lift' length <<<< lift' words <<<< IOF readFile
+  runIOF f "test.txt"
+  return ()
+
+-- By doing this we have started to reinvent arrows. Now lets do the same but using the arrow type-class.
+
+-- Implementing an arrow 
