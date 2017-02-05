@@ -560,4 +560,18 @@ instance Arrow IOArrow where
 -- Recall, 'return' lifts a value into a Monad and 'pure' lifts a value into an Applicative.
 -- Similarly, arr lifts a value into an Arrow
 
+-- Example of Arrow use:
+
+import Prelude hiding ((.), id)
+import Control.Category
+import Control.Applicative
+import Control.Arrow
+import Control.Monad
+import System.IO
+
+main = do
+  let f = IOArrow print . arr length . arr words . IOArrow readFile
+  runIOArrow f "test.txt"
+
+-- Arrow Operators
 
