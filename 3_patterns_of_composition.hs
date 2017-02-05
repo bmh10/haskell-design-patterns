@@ -535,4 +535,29 @@ main = do
 
 -- By doing this we have started to reinvent arrows. Now lets do the same but using the arrow type-class.
 
--- Implementing an arrow 
+-- Implementing an arrow
+
+-- To write an arrow we need the IOF type from the previous example, however this time we call it IOArrow:
+
+data IOArrow a b = IOArrow {runIOArrow :: a -> IO b}
+
+-- To make IOArrow a true arrow we need to implement Category and Arrow.
+-- Category describes function composition:
+
+instance Category IOArrow where
+  id = IOArrow return
+  -- (.) = (<<<<)
+  IOArrow f . IOArrow g = IOArrow $ f <=< g
+
+instance Arrow IOArrow where
+  -- arr = lift'
+  arr f = IOArrow $ return . f
+  first (IOArrow f) = IOArrow $ \(a, c) -> do
+    x <- f a
+    return (x, c)
+
+-- The arr function is just lift' from earlier but using IOArrow instead of IOF.
+-- Recall, 'return' lifts a value into a Monad and 'pure' lifts a value into an Applicative.
+-- Similarly, arr lifts a value into an Arrow
+
+
