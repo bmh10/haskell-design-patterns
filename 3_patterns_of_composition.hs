@@ -573,5 +573,18 @@ main = do
   let f = IOArrow print . arr length . arr words . IOArrow readFile
   runIOArrow f "test.txt"
 
+
 -- Arrow Operators
+
+-- By defining arr, first, and (.) on the Category instance, we get other operators for free.
+-- The (<<<) operator defines Arrow composition. It is the same as the (.) function composition defined in the arrow's Category instance:
+
+(<<<) :: Category cat => cat b c -> cat a b -> cat a c
+
+-- In above example we could have used (<<<) instead of (.)
+-- Another operator (>>>), is composition reversed:
+(>>>) = flip (.)
+
+-- Example of 'first':
+
 
