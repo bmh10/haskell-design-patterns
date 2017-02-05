@@ -587,4 +587,43 @@ main = do
 
 -- Example of 'first':
 
+main = do
+  let f = (IOArrow readFile) >>>
+          (arr words) >>>
+          (arr (\x -> (x, x))) >>> -- split stream in 2
+          (first (arr length)) >>> -- use first tuple value 
+          (IOArrow print)
+  runIOArrow f "test.txt"
+
+-- Now out final result is a tuple, the first part containing the word count and the second part containing the original words.
+-- Using this method we can create "side channels" in our pipelines, which allows us to share state across arrows in a pipeline.
+
+-- The 'second' operator works on the second part of the arrow's input:
+
+main = do
+  let f = (IOArrow readFile) >>> 
+          (arr words) >>>
+          (arr (\x -> (x, x))) >>>
+          (first (arr length)) >>>
+          (second (arr head)) >>>
+          (IOArrow print)
+  runIOArrow f "test.txt"
+
+-- Now we are doing 2 different computations on the different branches.
+-- Finally we look at the (***) operator:
+
+main = do
+  let f = (IOArrow readFile) >>>
+          (arr words) >>>
+          (arr (\x -> (x, x))) >>>
+          (arr length *** arr head) >>>
+          (IOArrow print)
+  runIOArrow f "test.txt"
+
+-- This does the same as using first and second - it runs 2 Arrows on the first and second tuple values.
+
+-- This ability allows Arrows to take multiple inputs and therefore we can build pipelines with branching and merging of stream values.
+
+
+-- Kleisli arrows and monad arrows
 
