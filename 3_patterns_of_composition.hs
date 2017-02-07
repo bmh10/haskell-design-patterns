@@ -627,3 +627,27 @@ main = do
 
 -- Kleisli arrows and monad arrows
 
+-- The IOArrow type we defined is actually unnecessary because there is already a Kleisli arrow, which generalizes IOArrow to all Monads.
+-- It is defined in Control.Arrow:
+data Kleisli m a b = K {runKleisli :: a -> m b}
+instance Monad m => Arrow (Kleisli m) where
+  arr f = K (\x -> return (f x))
+  K f >>> K g = K (\x -> f x >>= g)
+
+-- Using Kleisli arrows we could have just written:
+
+main = do
+  let f = Kleisli print . arr length . arr words . Kleisli readFile
+  runKleisli f "test.txt"
+
+-- Arrows generalize Monad.
+-- For every Monad type, there is a corresponding Arrow type. But there are more Arrows than Monads.
+
+-- From most to least general (and least to most powerful): Functor -> Applicative -> Arrow -> Monad
+
+-- Much like Monad stacks, we can combine different arrows into stacks using transformer Arrows.
+
+
+-- Why Arrows?
+
+
