@@ -660,4 +660,10 @@ main = do
 -- Arrows have been used in parsers, streaming applications, user interfaces and functional reactive programming.
 
 
+-- Summary
 
+-- Functor, applicative, arrow, and monad all lie on a spectrum of generality, with monad being the most powerful type.
+
+-- The historical development in these types helps to explain the redundancies in type-class methods across these types.
+
+-- We looked at ways in which function composition can be raised to the level of richer types.
