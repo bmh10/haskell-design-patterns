@@ -650,4 +650,14 @@ main = do
 
 -- Why Arrows?
 
+-- In 1996, Swierstra and Duponcheel published an optimization to deal with the space leaks prevelant in monadic parsers.
+-- The solution avoided the use of monads.
+
+-- John Hughes generalized their ideas and in the process generalized monads to arrows. First paper was in 2000.
+
+-- Arrows are less convenient than monads but have significantly wider applicability.
+
+-- Arrows have been used in parsers, streaming applications, user interfaces and functional reactive programming.
+
+
 
