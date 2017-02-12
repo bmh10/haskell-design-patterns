@@ -56,4 +56,22 @@ foldl ::            (b -> a -> b)   -> b -> [a] -> b
 
 -- Folding with Monoids
 
+-- Folding allows us to express all manner of accumulations:
+
+sum'     = foldr (+) 0
+product' = foldr (*) 1
+concatS' = foldr (++) ""
+concatL' = foldr (++) []
+
+any' = foldr (||) False
+all' = foldr (&&) True
+
+main = do
+  print $ sum' [2, 3, 5]
+  print $ product' [2, 3, 5]
+  print $ concatS' ["2", "3", "5"]
+  print $ concatL' [["2", "3", "5"]]
+  print $ any'     [False, False, True]
+  print $ all'     [True, True, True]
+
 
