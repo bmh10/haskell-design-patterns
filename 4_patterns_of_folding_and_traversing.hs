@@ -74,4 +74,35 @@ main = do
   print $ any'     [False, False, True]
   print $ all'     [True, True, True]
 
+-- These accumulation functions differ only in the same function and initial value.
+-- In each case, the initial value is also the identity for the corresponding operator:
+0 + x = x
+1 * x = x
+"" ++ x = x
+[] ++ x = x
+False || x = x
+True && x = x
 
+-- The monoid instance describes exactly this - an associative operator with an identity value:
+
+class Monoid a where
+  mempty :: a
+  mappend :: a -> a -> a
+  mconcat :: [a] -> a
+  mconcat = foldr mappend mempty
+
+-- mconcat is a generic version of our accumulation functions.
+
+-- Numbers are monoidal under addition and multiplication:
+
+newtype Sum' a = Sum' {getSum' a} deriving (Show)
+instance Num a => Monoid (Sum' a) where
+  mempty = Sum' 0
+  Sum' x `mappend` Sum' y = Sum' (x + y)
+
+newtype Product' a = Product' {getProduct' :: a}
+instance Num a => Monoid (Product' a) where
+  mempty = Product' 1
+  Product' x `mappend` Product' y = Product' (x * y)
+
+-- These are already defined in Data.Monoid as Sum and Product
