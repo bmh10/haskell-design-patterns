@@ -106,3 +106,29 @@ instance Num a => Monoid (Product' a) where
   Product' x `mappend` Product' y = Product' (x * y)
 
 -- These are already defined in Data.Monoid as Sum and Product
+
+-- This allows us to express + and * as a monoidal accumulation:
+
+-- 10 + 7
+(Sum 10) `mappend` (Sum 7) -- = Sum {getSum = 17}
+(Product 10) `mappend` (Product 7) -- = Product {getProduct = 70}
+
+-- Bool is a Monoid under the (||) and (&&) operators, corresponding to Any, All.
+-- List instance is a Monoid under (++) and [].
+
+-- So we can rewrite our earlier folds in monoidal form:
+
+folds = do
+  print $ mconcat [Sum 2, Sum 3, Sum 5]
+  print $ mconcat [Product 2, Product 3, Product 5]
+  print $ mconcat ["2", "3", "5"]
+  print $ mconcat [["2"], ["3"], ["5"]]
+  print $ mconcat [Any False, Any False, Any True]
+  print $ mconcat [All True, All True, All True]
+
+-- Folding accumulates and monoids are the datatype for accumulation.
+-- This is why the generalization of fold, described by the Foldable library rests on Monoid.
+
+-- Foldable
+
+
