@@ -131,4 +131,20 @@ folds = do
 
 -- Foldable
 
+-- We can fold over lists uding foldl/r and monadic functions using foldM.
+-- This doesn't help us when folding over other data structures e.g. trees
 
+data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show)
+
+-- If we constrain the inner type of Tree to be Monoid, we can fold over Tree:
+
+foldT :: Monoid a => Tree a -> a
+foldT (Leaf x) = x
+foldT (Node x lTree rTree) = (foldT lTree) `mappend` x `mappend` (foldT rTree)
+
+mainTreeSum = print . foldT $ Node (Sum 2) (Leaf (Sum 3)) (Leaf (Sum 5))
+
+-- It's not ideal that we have to inject Sum/Product into the Tree structure.
+-- We can avoid this by passing in a function to raise the elements being folded over to Monoid:
+
+ 
