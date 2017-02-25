@@ -161,4 +161,20 @@ main = do
   print $ foldT' (All . (>0)) aTree
   where aTree = Node 2 (Leaf 3) (Leaf 5)
 
+-- The Foldable type-class describes a more general interface for folding:
+
+class Foldable (t :: * -> *) where
+  foldMap :: Monoid m => (a -> m) -> t a -> m
+  foldr :: (a -> b -> b) -> b -> t a -> b
+
+-- foldMap function generalizes our foldT' instance:
+
+foldT'  :: Monoid m => (a -> m) -> Tree a -> m
+foldMap :: Monoid m => (a -> m) -> t a    -> m
+fold    :: Monoid m =>             t m    -> m
+
+-- fold assumes that the elements are already monoid:
+fold = foldmap id
+
+
 
