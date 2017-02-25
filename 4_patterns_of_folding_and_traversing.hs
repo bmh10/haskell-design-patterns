@@ -176,5 +176,17 @@ fold    :: Monoid m =>             t m    -> m
 -- fold assumes that the elements are already monoid:
 fold = foldmap id
 
+-- Let's make our tree a foldable instance:
 
+import Data.Monoid
+import qualified Data.Foldable as F
+import qualified Control.Monad as M
 
+instance F.Foldable Tree where
+  foldMap toMonoid (Leaf x) = toMonoid x
+  foldMap toMonoid (Node x lTree rTree)
+    = (F.foldMap toMonoid lTree)
+      `mappend` (toMonoid x)
+      `mappend` (F.foldMap toMonoid rTree)
+
+-- Instead of implementing fold for tree, we turned Tree into a Foldable container.
