@@ -147,4 +147,18 @@ mainTreeSum = print . foldT $ Node (Sum 2) (Leaf (Sum 3)) (Leaf (Sum 5))
 -- It's not ideal that we have to inject Sum/Product into the Tree structure.
 -- We can avoid this by passing in a function to raise the elements being folded over to Monoid:
 
- 
+foldT' :: Monoid a => (t -> a) -> Tree t -> a
+foldT' toMonoid (Leaf x) = toMonoid x
+foldT' toMonoid (Node x lTree rTree)
+ = (foldT' toMonoid lTree)
+   `mappend` (toMonoid x)
+   `mappend` (foldT' toMonoid rTree)
+
+main = do
+  print $ foldT' Sum aTree
+  print $ foldT' Product aTree
+  print $ foldT' (Any . (==5)) aTree
+  print $ foldT' (All . (>0)) aTree
+  where aTree = Node 2 (Leaf 3) (Leaf 5)
+
+
