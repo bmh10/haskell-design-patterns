@@ -220,4 +220,21 @@ doSum = F.foldrM doPlus
 
 main = doSum 0 aTree
 
+-- Foldable things can be expressed as lists by folding (:) over the Foldable:
+
+main = do
+  print $ F.toList aTree
+  -- same as:
+  print $ F.foldr (:) [] aTree
+
+-- Example shows that not all folding accumulates destructively.
+-- Fold accumulates the input structure into a single Monoid value, but the single value might be a composite structure.
+
+-- Both map and filter are special cases of fold, making fold the fundamental function of structured recursion.
+
+-- Foldable generalizes folding over arbitrary data structures, raising the concept of folding to type level.
+-- Foldable generalizes structured recursion in Haskell from lists to container types.
+
+
+-- Mapping over lists
 
