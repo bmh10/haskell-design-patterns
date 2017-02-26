@@ -190,3 +190,34 @@ instance F.Foldable Tree where
       `mappend` (F.foldMap toMonoid rTree)
 
 -- Instead of implementing fold for tree, we turned Tree into a Foldable container.
+
+-- A Foldable instance comes with many convenience functions that generalize the corresponding Prelude functions:
+main = do
+  print $ F.sum aTree
+  print $ F.product aTree
+  print $ F.any (==5) aTree
+  print $ F.all (>0) aTree
+  print $ F.maximum aTree
+  where aTree = Node 2 (Leaf 3) (Leaf 5)
+
+-- Here we see how List is generalized to the Foldable container for sum:
+
+sum :: Num a => [a] -> a
+F.sum :: (Foldable t, Num a) => t a -> a
+
+-- In the same way, Foldable.foldM generalizes folding over the Monad class:
+foldM :: Monad m => (b -> a -> m b) -> b -> [a] -> m b
+
+F.foldrM :: (Foldable t, Monad m) =>
+  (a -> b -> m b) -> b -> t a -> m b
+
+-- e.g.
+doSum = F.foldrM doPlus
+  where
+    doPlus acc x = do
+      putStrLn $ (show x) ++ " = " ++ (show acc)
+      return (acc + x)
+
+main = doSum 0 aTree
+
+
