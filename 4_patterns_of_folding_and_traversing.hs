@@ -238,3 +238,41 @@ main = do
 
 -- Mapping over lists
 
+-- Map is a specialization of fold since we can write map in terms of fold:
+
+map f = foldr ((:).f) []
+
+-- Just as with fold, we can map over lists with regular or monadic functions:
+
+doF n = do print n; return (n * 2)
+main = do
+  print $ map (*2) [2, 3, 5, 7]
+  mapM  doF [2, 3, 5, 7] >>= print
+  mapM_ doF [2, 3, 5, 7]
+
+--where:
+map   :: (a -> b)   -> [a] -> [b]
+mapM  :: (a -> m b) -> [a] -> m [b]
+mapM  :: (a -> m b) -> [a] -> m ()
+
+-- Previously we wrote mapM in terms of sequence and seqeucenA (the Monad and Applicative forms respectively).
+-- When we use sequenceA, we get a function that maps over Applicative:
+
+mapA :: Applicative f => (a -> f t) -> [a] -> f [t]
+mapA f = sequenceA' . (map f)
+
+sequenceA' :: Applicative f => [f t] -> f [t]
+sequenceA' [] = pure []
+sequenceA' (x:xs) = (:) <$> x <*> (sequenceA' xs)
+
+main = mapA doF [2, 3, 5, 7] >>= print
+
+-- This evaluates as:
+
+--sequenceA' . (map doF) [2, 3, 5, 7]
+-- (:) <$> (doF 2) <*> sequenceA' . (map doF) [3, 5, 7]
+-- (4:) (:) <$> (doF 3) <*> sequence' . (map doF) [5, 7]
+-- (4:6:10:14:[])
+
+-- Even though evaluation is lazy, each list element is being visited twice:
+--
