@@ -275,4 +275,22 @@ main = mapA doF [2, 3, 5, 7] >>= print
 -- (4:6:10:14:[])
 
 -- Even though evaluation is lazy, each list element is being visited twice:
---
+-- The mapA instance traverses the list and applies f to each traversed list element.
+-- sequenceA performs the resulting actions and re-assembles the results as a list
+
+-- However, if we define mapA in the following way, we will have a single traversal:
+mapA' f [] = pure []
+mapA' f (x:xs) = (:) <$> f x <*> (mapA' f xs)
+
+main = mapA' doF [2, 3, 5, 7] >>= print
+
+-- Given mapA, we can define sequenceA in terms of it:
+sequenceA = mapA id
+
+-- This means that mapA and sequenceA can be defined interdependently:
+mapA f = sequenceA . (map f)
+sequenceA = mapA id
+
+-- Appplicative map and sequence methods are at the heart of the Traversable type-class
+
+-- Traversable 
