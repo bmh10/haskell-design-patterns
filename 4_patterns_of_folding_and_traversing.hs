@@ -314,3 +314,30 @@ mapM :: Monad m => (a -> m b) -> [a] -> m [b]
 mapM :: Monad m => (a -> m b) -> t a -> m (t b)
 
 -- The Traversable type-class was introduced along with Applicative.
+
+-- A Traversable Tree
+
+-- Let's make our Tree an instance of Traversable. First the difficult way:
+
+-- Traversable must also be a Functor and Foldable:
+instance Functor Tree where
+  fmap f (Leaf x) = Leaf (f x)
+  fmap f (Node x lTree rTree) = Node (f x) (fmap f lTree) (fmap f rTree)
+
+instance Foldable Tree where
+  foldMap f (Leaf x) = f x
+  foldMap f (Node x lTree rTree) = (foldMap f lTree) `mappend` (f x) `mappend` (foldMap f rTree)
+
+-- traverse :: Applicative ma => (a -> ma b) -> mt a -> ma (mt b)
+instance Traversable Tree where
+  traverse g (Leaf x) = Leaf <$> (g x)
+  traverse g (Node x ltree rtree) = Node <$> (g x) <*> (traverse g ltree) <*> (traverse g rtree)
+
+data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show)
+
+aTree = Node 2 (Leaf 3) (Node 5 (Leaf 7) (Leaf 11))
+
+mainTraverse = traverse doF aTree
+  where doF n = do print n; return (n * 2)
+
+
