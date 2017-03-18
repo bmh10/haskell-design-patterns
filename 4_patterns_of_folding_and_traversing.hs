@@ -353,3 +353,14 @@ data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Functor, Foldabl
 
 -- The Traversal and Iterator Pattern
 
+-- Iterator pattern = "provide a way to access elements of an aggregate object sequentially without exposing its underlying representation"
+
+-- Applicative traversal captures the iterator pattern.
+
+-- The Traversable.traverse instance is the Applicative version of Traversable.mapM
+-- Traversable.traverse is therefore more general than mapM (because Applicative is more general than Monad).
+
+-- Also, because mapM does not rely on the Monad bind chain to communicate between iteration steps, Monad is a superfluous type for mapping with effects.
+-- So traverse in Applicative is superior to the monadic traversal (mapM).
+
+-- Modernizing Haskell 98
