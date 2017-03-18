@@ -293,4 +293,24 @@ sequenceA = mapA id
 
 -- Appplicative map and sequence methods are at the heart of the Traversable type-class
 
--- Traversable 
+-- Traversable
+
+-- As with Prelude.foldM, mapM fails us beyond lists e.g. we cannot mapM over our Tree from earlier.
+-- The Traversable type-class relates to map in the same manner as Foldable relates to fold:
+
+class (Functor t, Foldable t) => Traversable (t :: * -> *) where
+  -- Applicative form
+  traverse  :: Applicative f => (a -> f b) -> t a -> f (t b)
+  sequenceA :: Applicative f => t (f a) -> f (t a)
+
+  -- Monadic form (redundant)
+  mapM     :: Monad m => (a -> m b) -> t a -> m (t b)
+  sequence :: Monad m => t (m a) -> m (t a)
+
+-- traverse function generalizes our mapA function, which only works with lists, to work with all Traversable containers.
+-- Similarly, Traversable.mapM is a more general version of Prelude.mapM for lists.
+
+mapM :: Monad m => (a -> m b) -> [a] -> m [b]
+mapM :: Monad m => (a -> m b) -> t a -> m (t b)
+
+-- The Traversable type-class was introduced along with Applicative.
