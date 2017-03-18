@@ -340,4 +340,16 @@ aTree = Node 2 (Leaf 3) (Node 5 (Leaf 7) (Leaf 11))
 mainTraverse = traverse doF aTree
   where doF n = do print n; return (n * 2)
 
+-- An easier way to do this is to auto-implement the functor, Foldable, and Traversable:
+
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveTraversable #-}
+import Data.Traversable
+
+data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Functor, Foldable, Traversable)
+
+-- More details on this in chapter 6.
+
+-- The Traversal and Iterator Pattern
 
