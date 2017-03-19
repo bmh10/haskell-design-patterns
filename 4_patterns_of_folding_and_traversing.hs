@@ -424,4 +424,13 @@ fmapRoot f tree = setRoot tree newRoot
 
 -- We can use the same approach here by writing fmapRoot to work in a single step:
 
+fmapRoot' :: (a -> a) -> Tree a -> Tree a
+fmapRoot' f (Leaf z)     = Leaf (f z)
+fmapRoot' f (Node z l r) = Node (f z) l r
 
+setRoot' :: Tree a -> a -> Tree a
+setRoot' tree x = fmapRoot' (\_ -> x) tree
+
+main = do
+  print $ setRoot' intTree 11
+  print $ fmapRoot' (*2) intTree
