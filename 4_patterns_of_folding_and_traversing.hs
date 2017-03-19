@@ -364,3 +364,22 @@ data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Functor, Foldabl
 -- So traverse in Applicative is superior to the monadic traversal (mapM).
 
 -- Modernizing Haskell 98
+
+-- Introduction of Applicative, along with Foldable and Traversable, have had a big impact on Haskell.
+
+-- Foldable and Traversable lift fold and map to a higher level of abstraction.
+
+-- Traversable - describes a process that preserves the shape of the data structure being traversed over.
+-- Foldable - discards or transforms the shape of the structure being folded over.
+
+-- Since Traversable is a specialization of Foldable, we can say that shape preservation is a special case of shape transformation.
+-- This distinction is clearly visible from the fact that function that discard their result (e.g. mapM_, forM_, sequence_, ...) are in Foldable, while their shape-preserving equivalents are in Traversable.
+
+-- Applicable, Foldable and Traversable only recently found their way into Haskell.
+-- Change way managed under the "Folable Traversable in Prelude" proposal which can be found online.
+-- It includes the replacement of less generic functions in Prelude, Control.Monad, and Data.List with their more polymorphic counterparts in Foldable and Traversable.
+
+-- There were some concerns about these changes as more generic types make the language harder to understand and learn.
+
+-- Lenses
+
