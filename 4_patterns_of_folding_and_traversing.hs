@@ -383,3 +383,9 @@ data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Functor, Foldabl
 
 -- Lenses
 
+-- A Lens provides access to a particular part of a data structure.
+-- They express a high-level pattern for composition but are also deeply entwined with Foldable and Traversable.
+-- Lenses relate to getter/setter functions.
+
+-- Deriving Lens
+
