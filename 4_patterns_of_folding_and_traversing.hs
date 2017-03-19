@@ -412,3 +412,16 @@ mainLens1 = do
   print $ setRoot intTree 11
   print $ getRoot (setRoot intTree 11)
 
+-- If we want to pass in a setter function instead of a value:
+
+fmapRoot :: (a -> a) -> Tree a -> Tree a
+fmapRoot f tree = setRoot tree newRoot
+  where newRoot = f (getRoot tree)
+
+-- We get the root, apply the function, then set the result.
+-- This double work is akin to the double traversal we saw when writing traverse in terms of sequenceA.
+-- We resolved the issue by defining traverse.
+
+-- We can use the same approach here by writing fmapRoot to work in a single step:
+
+
