@@ -389,3 +389,26 @@ data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Functor, Foldabl
 
 -- Deriving Lens
 
+-- Tree from earlier:
+
+data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show)
+
+intTree = Node 2 (Leaf 3) (Node 5 (Leaf 7) (Leaf 11)
+listTree = Node [1,1] (Leaf [2,1]) (Node [3,2] (Leaf [5,2]) (Leaf [7,4]))
+tupleTree = Node (1,1) (Leaf (2,1)) (Node (3,2) (Leaf (5,2)) (Leaf (7,4)))
+
+-- Generic getter/setter functions:
+
+getRoot :: Tree a -> a
+getRoot (Leaf z)     = z
+getRoot (Node z _ _) = z
+
+setRoot :: Tree a -> a -> Tree a
+setRoot (Leaf z)     x = Leaf x
+setRoot (Node z l r) x = Node x l r
+
+mainLens1 = do
+  print $ getRoot intTree
+  print $ setRoot intTree 11
+  print $ getRoot (setRoot intTree 11)
+
