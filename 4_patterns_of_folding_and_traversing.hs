@@ -465,3 +465,21 @@ type Lens' s a = Functor f' => (a -> f' a) -> s -> f' s
 
 lens' :: Functor f  => (a -> f' a) -> s      -> f' s
 root  :: Functor f' => (a -> f' a) -> Tree a -> f' (Tree a)
+
+-- This is not very tangible. fmapRootIO is easier to understand, with the Functor f' being IO:
+
+fmapRootIO :: (a -> IO a) -> Tree a -> IO (Tree a)
+fmapRootIO g (Leaf z)     = (g z) >>= return . Leaf
+fmapRootIO g (Node z l r) = (g z) >>= return . (\x -> Node x l r)
+
+displayM x = print x >> return x
+
+mainLens2 = fmapRootIO displayM intTreei
+
+-- If we drop down from Monad into Functor, we have a Lens for the root of a Tree:
+
+root :: Functor f' => (a -> f' a) -> Tree a -> f' (Tree a)
+root g (Node z l r) = fmap (\x -> Node x l r) (g z)
+root g (Leaf z)     = fmap Leaf (g z)
+
+ 
