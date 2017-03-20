@@ -482,4 +482,26 @@ root :: Functor f' => (a -> f' a) -> Tree a -> f' (Tree a)
 root g (Node z l r) = fmap (\x -> Node x l r) (g z)
 root g (Leaf z)     = fmap Leaf (g z)
 
+-- As monad is a functor, this function also works with monadic functions:
+
+mainLens3 = root displayM intTree
+
+-- As root is a Lens, the Lens library gives us the following:
+
+-- import Control.Lens
+main = do
+  -- GET
+  print $ view root listTree
+  print $ view root intTree
+  -- SET
+  print $ set root [42] listTree
+  print $ set root 42 intTree
+  -- FMAP
+  print $ over root (+11) intTree
+
+-- The over instance is the way in which Lens uses fmap to map a function into a Functor method.
+
+
+-- Composable getters and setters
+
  
