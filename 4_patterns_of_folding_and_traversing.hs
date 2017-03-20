@@ -504,4 +504,30 @@ main = do
 
 -- Composable getters and setters
 
+-- We can have another Lens on a Tree instance which focuses on the rightmost leaf:
+
+rightMost :: Functor f' => (a -> f' a) -> Tree a -> f' (Tree a)
+
+rightMost g (Node z l r) = fmap (\r' -> Node z l r') (rightMost g r)
+rightMost g (Leaf z)     = fmap (\x -> Leaf x) (g z)
+
+-- The Lens library provides several lenses for Tuple (e.g. _1 which brings focus to the first Tuple element).
+-- We can compose our rightMost lens with the Tuple lenses:
+
+mainLens4 = do
+  print $ view rightMost       tupleTree
+  print $ set  rightMost (0,0) tupleTree
+
+  -- Compose getters and setters
+  print $ view (rightMost._1)        tupleTree
+  print $ set  (rightMost._1) 0      tupleTree
+  print $ over (rightMost._1) (*100) tupleTree
+
+-- A Lens can serve as a getter, setter, or modifier.
+
+-- We compose Lenses using regular function composition (.)
+-- Note that the order of composition is reversed i.e. in (rightMost._1), the rightMost lens is applied before the _1 lens.
+
+-- Lens Traversal
+
  
