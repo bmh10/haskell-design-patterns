@@ -434,3 +434,21 @@ setRoot' tree x = fmapRoot' (\_ -> x) tree
 main = do
   print $ setRoot' intTree 11
   print $ fmapRoot' (*2) intTree
+
+-- fmapRoot' function delivers a function to a particular part of the structure and returns the same structure.
+-- To allow IO, we need a new function:
+  fmapRootIO :: (a -> IO a) -> Tree a -> IO (Tree a)
+
+-- We can generalize this beyond IO to all monads:
+
+fmapM :: (a -> m a) -> Tree a -> m (Tree a)
+
+-- If we relax the requirement for Monad and generalize to all Functor container types f',
+-- we get a simple van Larrhoven Lens of type:
+
+type Lens' s a = Functor f' => (a -> f' a) -> s -> f' s
+
+-- The good thing about a van Laarhoven Lens is that, given the above function type, we also gain get, set, fmap, and mapM,
+-- along with many other functions and operators.
+
+-- The Lens function type 
