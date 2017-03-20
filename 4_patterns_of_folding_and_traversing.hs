@@ -451,4 +451,17 @@ type Lens' s a = Functor f' => (a -> f' a) -> s -> f' s
 -- The good thing about a van Laarhoven Lens is that, given the above function type, we also gain get, set, fmap, and mapM,
 -- along with many other functions and operators.
 
--- The Lens function type 
+-- The Lens function type signature is all it takes to make something a Lens that can be used with the Lens library.
+-- It is unusual to use a type signature as the 'primary interface' for a library.
+-- The immediate benefit is that we can define a Lens without referring to the Lens library.
+
+
+-- Writing a Lens
+
+-- A Lens provides focus on an element in a data structure.
+
+-- Our first Lens will focus on the root node of a Tree instance.
+-- Using the Lens type signature as a guide, we arrive at the following:
+
+lens' :: Functor f  => (a -> f' a) -> s      -> f' s
+root  :: Functor f' => (a -> f' a) -> Tree a -> f' (Tree a)
