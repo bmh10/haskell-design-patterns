@@ -530,4 +530,14 @@ mainLens4 = do
 
 -- Lens Traversal
 
+-- A Lens focuses on one part of a data structure, not several; e.g. a Lens cannot focus on all the leaves of a Tree.
+
+-- To focus on more than one part of a structure, we need a Traversal, the Lens generalization of Traversable.
+-- As Lens relies on Functor, Traversal relies on Applicative.
+-- Other than this, the signatures are exactly the same:
+
+traversal :: Applicative f' => (a -> f' a) -> Tree a -> f' (Tree a)
+lens      :: Functor f'     => (a -> f' a) -> Tree a -> f' (Tree a)
+
+ 
  
