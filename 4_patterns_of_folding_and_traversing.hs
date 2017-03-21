@@ -606,3 +606,8 @@ foldMapOf :: Profunctor p => Accessing p r s a -> p a r -> s -> r
 -- Lens library has been critized for not relecting idiomatic Haskell and for taking on too much responsibility.
 
 -- Summary
+
+-- We followed the evolution of fold and map, starting with lists, then generalizing for all Foldable/Traversable containers.
+-- We then saw how the Lens library places folding and traversing in an even broader context.
+-- Lenses give us a unified vocabulary to navigate through data structures -> "query language for data structures"
+-- As we moved up through the layers of abstraction, the function type signatures became ever more generic.
