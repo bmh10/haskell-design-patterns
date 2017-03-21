@@ -584,4 +584,25 @@ getSum $ foldMapOf lens Sum
 
 -- The Lens Library
 
+-- We've only uses simple Lenses; a full parameterized Lens would allow for replacing parts of a data structure with different types:
 
+type Lens s t a b = Functor f' => (a -> f' b) -> s -> f' t
+type Lens' s a = Lens s s a a -- Simple Lens
+
+-- Lens library function names do their best not to clash with existing names e.g. droppingWhile vs dropWhile
+-- This typically allows for an unqualified import of the Lens library.
+
+-- By leaving the Lens function type transparent we get Traversals by simply swapping out functor for Applicative in the Lens type definition.
+-- We also get to define lenses without having to reference the Lens library.
+-- One downside is that Lens type signatures can be bewildering at first:
+
+mapMOf :: Profunctor p => Over p (WrappedMonad m) s t a b -> p a (m b) -> s -> m t
+foldMapOf :: Profunctor p => Accessing p r s a -> p a r -> s -> r
+
+-- On the surface, the Lens library gives us composable getters and setters, but there is much more to the Lens library than that.
+-- By generalizing Foldable and Traversable into Lens abstractions, the Lens library lifts getters, setters, lenses, and Traversals into
+-- a unified framework in which they call compose together.
+
+-- Lens library has been critized for not relecting idiomatic Haskell and for taking on too much responsibility.
+
+-- Summary
