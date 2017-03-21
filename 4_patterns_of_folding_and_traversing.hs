@@ -569,3 +569,19 @@ main = do
 
 
 -- Lens.Fold
+
+-- The Lens.Traversal function lifts Traversable into the realm of lenses, while Lens.Fold does the same for Foldable:
+
+main = do
+  print $ sumOf leaves intTree
+  print $ anyOf leaves (>0) intTree
+
+-- Just as for Foldable sum and foldMap, we can write Lens sumOf in terms of foldMapOf:
+
+getSum $ foldMapOf lens Sum
+
+-- where foldMapOf is a generalization of Foldable.foldMap
+
+-- The Lens Library
+
+
