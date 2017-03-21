@@ -539,5 +539,33 @@ mainLens4 = do
 traversal :: Applicative f' => (a -> f' a) -> Tree a -> f' (Tree a)
 lens      :: Functor f'     => (a -> f' a) -> Tree a -> f' (Tree a)
 
- 
- 
+-- A leaves Traversal delivers the setter function to all the leaves of the Tree:
+
+leaves :: Applicative f' => (a -> f' a) -> Tree a -> f' (Tree a)
+leaves g (Node z l r) = Node z <$> leaves g l <*> leaves g r
+leaves g (Leaf z) = Leaf <$> (g z)
+
+-- We can use set and over with our new Traversal instance:
+
+set leaves 0 intTree
+over leaves (+1) intTree
+
+-- Traversals compose seamlessly with Lenses:
+
+main = do
+  -- Compose traversal + Lens
+  print $ over (leaves._1) (*100) tupleTree
+
+  -- Compose Traversal + Traversal
+  print $ over (leaves.both) (*100) tupleTree
+
+  -- map over each elem in target container
+  print $ over (leaves.mapped) (*(-1)) listTree
+
+  -- Traversal with effects
+  mapMOf leaves displayM tupleTree
+
+-- The both function is a Tuple Traversal that focuses on both elements.
+
+
+-- Lens.Fold
