@@ -31,4 +31,20 @@ tupleF show (True, False)
 tupleF show (True, 2)
 tupleF length ([True, False, False], [1, 2, 4])
 
-  
+-- RankNTypes allow us to enforce parametric polymorphism explicitly.
+-- We want tupleF to accept a ploymorphic function of arguments; in other words, we want our function to have a 'higher rank type', in this case Rank 2:
+
+{-~ LANGUAGE Rank2Types #-}
+
+tupleF' :: (Show a1, Show a2) => (forall a . Show a => a -> b) -> (a1, a2) -> (b, b)
+tupleF' elemF (x, y) = (elemF x, elemF y)
+
+-- The use of forall in the elemF function signature tells the complier to make elemF polymorphic in a, as shown:
+
+mainRankN1 = do
+  -- same as before
+  print $ tupleF' show (1, 2)
+  print $ tupleF' show (True, False)
+
+  -- and now we can do this
+  print $ tupleF' show (True, 2)
