@@ -64,3 +64,28 @@ id :: a -> a
 
 -- Abstracting Datatypes
 
+-- In this section we describe a series of patterns related to data abstraction.
+-- We start with existentially quantified types, then move to phantom types and end with GADTs.
+
+-- Universal Quantification
+
+-- Let's explore existential quantification from the perspective of its opposite, universal quantification.
+-- We rely on universal quntification whenever we parameterize function types. e.g:
+
+id' :: a -> a
+-- Is the same as:
+id' :: forall a. a -> a
+id' x = x
+
+-- In general, universal quantification expresses parametric polymorphism in functions and datatypes.
+-- We use the forall keyword in the Rank-n function type to indicate nested parametric polymorphism.
+-- Similarly, universal quantification is the default pattern when parameterizing types with types:
+
+data Maybe' a = Nothing' | Just' a
+
+-- conceptually (but not practically) the same as:
+data Maybe' a = forall a. Nothing' | Just' a
+
+-- As another example, consider the following universally quantified type:
+
+
