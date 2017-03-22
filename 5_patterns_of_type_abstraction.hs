@@ -47,4 +47,20 @@ mainRankN1 = do
   print $ tupleF' show (True, False)
 
   -- and now we can do this
-  print $ tupleF' show (True, 2)
+  print $ tupleF' show (True, 2) -- polymorphic
+
+-- The rank of the type refers to the nesting depth at which polymorphism occurs.
+-- Rank 0 describes the absence of polymorphism. e.g:
+
+intAdd :: Int -> Int -> Int
+
+-- Rank 1 refers to regular parametric polymorphism:
+id :: a -> a
+
+-- tupleF' is Rank 2.
+-- Rank n describes deeper nested polymorphism.
+-- Typically the cases for using deeper levels of polymorphism are rare, however when you need higher-rank types there are usually no workarounds.
+
+
+-- Abstracting Datatypes
+
