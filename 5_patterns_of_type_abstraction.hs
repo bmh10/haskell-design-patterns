@@ -88,4 +88,27 @@ data Maybe' a = forall a. Nothing' | Just' a
 
 -- As another example, consider the following universally quantified type:
 
+data ObjU a = ObjU a       -- property
+             (a -> Bool)   -- obj method
+             (a -> String) -- obj method
+
+-- Here we mimic an object with the property of type a and 2 object methods.
+-- We can apply a method to the property by extracting the value and the method with pattern matching:
+
+obj_f1 :: ObjU a -> Bool
+obj_f1 (Obj v f1 _) = f1 v
+
+obj_f2 :: ObjU a -> Bool
+obj_f2 (Obj v f2 _) = f2 v
+
+main = do
+  print $ obj_f1 obj -- even 3
+  print $ obj_f2 obj -- show 3
+    where obj = (ObjU 3 even show)
+
+-- We've packed a value with some functions in the ObjU object but we haven't encapsulated the value as a true object would have.
+-- This is what existential quantification enables us to do.
+
+-- Existential quantification and abstract datatypes
+
 
