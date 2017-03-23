@@ -131,3 +131,18 @@ mainObjE = do
     where obj = (ObjE even show)
 
 -- We can access an encapsulated object property only with the functions packaged with that property.
+-- e.g. we cannot apply any other function to the following property:
+
+-- INVALID (cannot infer types)
+objE_f3 (ObjE v f1 f2) = v
+
+-- Existential quantification provides us with the means to implement abstract datatypes, thus providing functions over a type while hiding the representation of the type.
+-- We can also achieve the abstract datatypes on a higher level by using Haskell's module system to hide algebraic datatype constructors while exporting functions over the type.
+
+-- From now on we will refer to types that are existentially qualified as 'existentials'.
+
+-- Universal                   | Existential
+-- Type parameterization       | Type abstraction
+-- Parametric polymorphism     | Encapsulation
+-- User of data specifies type | implementer of data specified type
+-- forall = "for all"          | forall = "for some"
