@@ -163,4 +163,21 @@ eval1 (Add1 x y) = (eval1 x) + (eval1 y)
 
 data Expr2 = I2 Int | B2 Bool | Add2 Expr2 Expr2 deriving Show
 
+-- This has brought about 2 problems:
+-- 1. Add2 was only meant to work with I2 Ints, but we can now construct a bad value. The regular algebraic datatypes don't allow us to express this relationship constraint between 2 constructors:
+
+-- construct a 'bad' value
+(Add2 (I2 11) (B2 True))
+
+-- 2. The type inference can no longer be inferred or defined for eval:
+
+-- INVALID
+eval2 :: Expr2 -> t
+eval2 (I2 v) = v
+eval2 (B2 v) = v
+eval2 (Add2 x y) = (eval2 x) + (eval2 y)
+
+-- In this case phantom types solve the first problem by added a type t in:
+
+data Expr3 t = I3 Int | B3 Bool | Add3 (Expr3 Int) (Expr3 Int) deriving Show
 
