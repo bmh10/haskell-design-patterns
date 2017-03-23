@@ -98,10 +98,10 @@ data ObjU a = ObjU a       -- property
 obj_f1 :: ObjU a -> Bool
 obj_f1 (Obj v f1 _) = f1 v
 
-obj_f2 :: ObjU a -> Bool
+obj_f2 :: ObjU a -> String
 obj_f2 (Obj v f2 _) = f2 v
 
-main = do
+mainObjU = do
   print $ obj_f1 obj -- even 3
   print $ obj_f2 obj -- show 3
     where obj = (ObjU 3 even show)
@@ -111,4 +111,23 @@ main = do
 
 -- Existential quantification and abstract datatypes
 
+-- We now introduce an existentially quantified ObjE object which hides the type parameter instead of the universally qualified ObjU object.
+-- The type param is no longer present on the left-hand side:
 
+data ObjE = forall a . ObjE a (a -> Bool) (a -> String)
+
+-- This means that the type parameter is also hidden in the type signature of objE_f1/2:
+
+objE_f1 :: ObjE -> Bool
+objE_f1 (ObjE v f1 _) = f1 v
+
+objE_f2 :: ObjE -> String
+objE_f2 (ObjE v f2 _) = f2 v
+
+-- requires {-# LANGUAGE ExistentialQuantification #-}
+mainObjE = do
+  print $ objE_f1 obj -- even 3
+  print $ objE_f2 obj -- show 3
+    where obj = (ObjE even show)
+
+-- We can access an encapsulated object property only with the functions packaged with that property.
