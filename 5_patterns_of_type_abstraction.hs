@@ -146,3 +146,21 @@ objE_f3 (ObjE v f1 f2) = v
 -- Parametric polymorphism     | Encapsulation
 -- User of data specifies type | implementer of data specified type
 -- forall = "for all"          | forall = "for some"
+
+-- Phantom Types
+
+-- Phantom types were introduced in 1999 as a solution to the challenges that arise when embedding a type-safe domain specific language (DSL) in Haskell.
+
+-- Consider this trivial expression language and evaluator:
+
+data Expr1 = I1 Int | Add Expr1 Expr1
+
+eval1 :: Expr1 -> Int
+eval1 (I1 v) = v
+eval1 (Add1 x y) = (eval1 x) + (eval1 y)
+
+-- When we add another base type (B2 Bool) to the expression language, the situation becomes more complicated:
+
+data Expr2 = I2 Int | B2 Bool | Add2 Expr2 Expr2 deriving Show
+
+
