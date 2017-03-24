@@ -238,4 +238,26 @@ data Expr t
     B :: Bool -> Expr Bool
     Add :: Expr Int -> Expr Int -> Expr Int
 
--- The GADTs smart constructors describe constrained instance of Expr t.
+-- The GADTs smart constructors describe constrained instances of Expr t.
+-- As with phantom types, smart constructors provide increased type safety for data construction.
+-- However, GADT's give us something we don't get from phantom types:
+
+eval :: Expr t -> t
+eval (I v) = v
+eval (B v) = v
+eval (Add x y) = (eval x) + (eval y)
+
+-- eval (Add (I 10) (I 12))
+
+-- This is because GADT smart constructors are built into the type and we can match the pattern on them.
+-- This solves the problem of type inference the we had with phantom types.
+-- This is why GADTs are also known as first-class phantom types.
+
+-- GADTs are not expressed by syntax but rather by the relationship between the type parameters and the constructor return types.
+-- Similarly, phantom types are not expressed by syntax but implied by the lack of appearance of a type parameter in the type constructors.
+
+-- There is a subtle drift in the meaning of type parameter, from signifying the type of some embedded value to expressing the type metadata.
+
+
+-- Typecase Pattern
+
