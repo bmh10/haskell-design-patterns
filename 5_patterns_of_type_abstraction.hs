@@ -261,3 +261,13 @@ eval (Add x y) = (eval x) + (eval y)
 
 -- Typecase Pattern
 
+-- Generic programming is another important use case for GADTs.
+-- As an example, consider a type representation Rep that unifies the 3 variable types Int, Char, and List:
+
+data Rep t where
+  RInt  :: Rep Int
+  RChar :: Rep Char
+  RList :: Show a => Rep a -> Rep [a]
+
+-- The RList function can be thought of as being existentially qualified ('a' does not appear on the LHS).
+-- The phantom t in Rep t will serve as the type metadata
