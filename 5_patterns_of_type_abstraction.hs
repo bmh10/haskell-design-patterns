@@ -177,7 +177,45 @@ eval2 (I2 v) = v
 eval2 (B2 v) = v
 eval2 (Add2 x y) = (eval2 x) + (eval2 y)
 
--- In this case phantom types solve the first problem by added a type t in:
+-- In this case phantom types solve the first problem by adding a type t in:
 
 data Expr3 t = I3 Int | B3 Bool | Add3 (Expr3 Int) (Expr3 Int) deriving Show
+
+-- The type t serves as a type placeholder that can be used by each constructor to describe its particular type.
+-- However, all the constructors still return the same type:
+
+I3   :: Int  -> Expr3 t
+B3   :: Bool -> Expr3 t
+Add3 :: Expr3 Int -> Expr3 Int -> Expr3 t
+
+-- The Expr3 value is parametrized by the type t, but t does not appear in any of the constructors, hence the term 'phantom type'.
+-- We can still construct invalid values:
+
+Add3 (I3 11)  (B3 True)
+
+-- However, we can still use the phantom type information to create type-safe smart constructors:
+
+i3 :: Int -> Expr3 Int
+i3 = I3
+
+b3 :: Bool -> Expr3 Bool
+b3 = B3
+
+add3 :: Expr3 Int -> Expr3 Int -> Expr3 Int
+add3 = Add3
+
+-- If we use the smart constructors instead of the datatype constructors, the Haskell type-checker will prevent us from creating invalid values.
+-- For example the following will be rejected:
+
+-- INVALID
+add3 (i3 10) (b3 True)
+
+-- However, type inference remains a problem because the values are still not described accurately:
+
+(I3 12) :: Expr3 t -- not :: Expr3 Int
+
+-- The effect is that adding values remains too ambiguous:
+
+eval3 (Add3 x y) = (eval3 x) + (eval3 y)
+
 
