@@ -218,4 +218,24 @@ add3 (i3 10) (b3 True)
 
 eval3 (Add3 x y) = (eval3 x) + (eval3 y)
 
+-- Despite these limitations, phantom types containue to be useful in other areas.
+-- e.g. the Lens library uses the const phantom type to great effect.
 
+-- We have seen how Phantom types enable type-safe construction (problem '1' from earlier).
+-- In order to solve problem '2' we need generalized algebraic datatypes (GADTs).
+
+-- Generalized Algebraic Datatypes
+
+-- GADTs emerged independently from both ML and Haskell camps in 2003 and were part of GHC by 2005.
+-- GADTs bring together phantom types, smart constructors, and refined pattern matching:
+
+{-# LANGUAGE GADTs #-}
+
+data Expr t
+  where
+    -- Built-in smart constructors
+    I :: Int  -> Expr Int
+    B :: Bool -> Expr Bool
+    Add :: Expr Int -> Expr Int -> Expr Int
+
+-- The GADTs smart constructors describe constrained instance of Expr t.
