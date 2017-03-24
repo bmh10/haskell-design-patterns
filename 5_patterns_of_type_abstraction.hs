@@ -270,4 +270,25 @@ data Rep t where
   RList :: Show a => Rep a -> Rep [a]
 
 -- The RList function can be thought of as being existentially qualified ('a' does not appear on the LHS).
--- The phantom t in Rep t will serve as the type metadata
+-- The phantom t in Rep t will serve as the type metadata.
+
+-- We can now write a function that takes a value along with its type representation:
+
+showT :: Show t => Rep t -> t -> String
+showT RInt i  = (show i) ++ " :: INT"
+showT RChar i = (show i) ++ " :: Char"
+
+showT (RList rep) [] = "THE END"
+showT (RList rep) (x:xs) = (showT rep x) ++ ", " ++ (showT (RList rep) xs)
+
+-- The showT function is a type-indexed function because it is defined for each member of the family of types Rep t:
+
+showT RInt 3
+showT (RList RInt)  [12, 13, 14]
+showT (RList RChar) ['2','3','5']
+
+-- To be more precise, showT is a closed type-indexed function because the type index family (Rep t) is fixed.
+
+-- In contrast, the show function of the Show type-class is an example of an open type-indexed function.
+-- show is simply type-indexed by instances of Show and considered 'open' because we can add new types to the type index freely.
+
