@@ -323,4 +323,23 @@ data Dynamic where
 instance Show Dynamic where
   show (Dyn rep v) = showT rep v
 
+-- We can use this GADT to define  heterogeneous list of dynamically types values:
 
+dynList :: [Dynamic]
+dynList = [Dyn RChar 'x', Dyn RInt 3]
+
+showDyn (Dyn rep v) = showT rep v
+
+-- The showDyn function acts on dynamic values while the generic function showT acts on "generic data".
+
+-- To achieve representable lists of dynamic types, (RList RDyn), we need to add another constructor to our representation Rep:
+
+data Rep t where
+  RInt  :: Rep Int
+  RChar :: Rep Char
+  RList :: Show a => Rep a -> Rep [a]
+  RDyn  :: Rep Dynamic
+
+-- as well as another clause for showT to deal with the dynamic values (analogous to ShowDyn):
+
+showT RDyn (Dyn rep v) = showT rep v
