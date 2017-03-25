@@ -292,3 +292,17 @@ showT (RList RChar) ['2','3','5']
 -- In contrast, the show function of the Show type-class is an example of an open type-indexed function.
 -- show is simply type-indexed by instances of Show and considered 'open' because we can add new types to the type index freely.
 
+-- In languages that allow us to reflect on the type of a value, we can write showT by dealing with the parameter value on a "type-case" basis:
+
+-- pseudo code
+case (type t) of
+  Int  -> (show t) ++ ":: INT"
+  Char -> (show t) ++ ":: CHAR"
+  List -> -- show list
+
+-- This style has been distilled into a design pattern:
+-- TypeCase -> a design pattern that allows the definition of closed type-indexed functions, in which the index family is fixed but the collection of functions is extensible.
+
+-- Dynamic Types
+
+
