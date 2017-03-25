@@ -305,4 +305,22 @@ case (type t) of
 
 -- Dynamic Types
 
+-- We now have the ingredients to define dynamic types.
+-- All we need to do is package a type together with the type representation, as shown:
+
+data DynamicEQ = forall t. Show t => DynEQ (Rep t) t
+
+-- Here, we've done the packaging using existential quantification. Event though DynEq dynamic values have opaque type, they are well typed.
+-- e.g. we can use them to express heterogeneous lists:
+
+dynEQList = [DynEQ RChar 'x', DynEQ RInt 3]
+
+-- Since GADTs generalize existentials, we can also write a "dynamic GADT", such as the following:
+
+data Dynamic where
+  Dyn :: Show t => Rep t -> t -> Dynamic
+
+instance Show Dynamic where
+  show (Dyn rep v) = showT rep v
+
 
