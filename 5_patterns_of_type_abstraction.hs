@@ -378,3 +378,27 @@ hListEq1 = [LI_Eq1 3, LI_Eq1 "5"]
 -- e.g. in order to show list items we need to package a show function with each item:
 
 data LI_Eq2 = forall a. LI_Eq2 a (a -> String)
+
+hListEq2 :: [LI_Eq2]
+hListEq2 = [LI_Eq2 3 (show :: Int -> String), LI_Eq2 "5" (show :: String -> String)]
+
+-- We add the show types here for clarity but they can be inferred and therefore omitted.
+
+showEq2 (LI_Eq2 v showF) = showF v
+-- e.g. main = mapM_ (putStrLn . showEq2) hListEq2
+
+-- Using type-classes (e.g. Show) instead of embedding functions makes the code more compact:
+
+data LI_Eq3 = forall a. Show a => LI_Eq3 a
+
+hListEq3 :: [LI_Eq3]
+hListEq3 = [LI_Eq3 3, LI_Eq3 "5"]
+
+showEq3 (LI_Eq3 v) = show v
+
+-- The type-class constraint specified in the existential is called bounded quantification (bounded by type-class)
+
+-- Using GADTs
+
+
+
