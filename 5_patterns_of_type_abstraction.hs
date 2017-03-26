@@ -343,3 +343,20 @@ data Rep t where
 -- as well as another clause for showT to deal with the dynamic values (analogous to ShowDyn):
 
 showT RDyn (Dyn rep v) = showT rep v
+
+-- Now we have generic functions acting on dynamic types:
+
+main = do
+  print $ showT RInt 17
+  print $ showT (RList RInt) [12,13,14]
+  print $ showT (RList RDyn) dynList
+
+-- Dynamic types carry enough information about themselves to enable safe type casting:
+
+toInt :: Dynamic -> Maybe Int
+toInt (Dyn RInt i) = Just i
+toInt (Dyn _ _)    = Nothing
+
+
+-- Heterogeneous Lists
+
