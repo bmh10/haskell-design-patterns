@@ -400,5 +400,15 @@ showEq3 (LI_Eq3 v) = show v
 
 -- Using GADTs
 
+-- We can express heterogeneous lists in the same two styles the we used with existentials.
+-- In the first style we pass in the show function (a -> String):
 
+{-# LANGUAGE GADTs #-}
 
+data LI_Gadt1 where
+  {MkShow1 :: a -> (a -> String) -> LI_Gadt1}
+
+hListGadt1 :: [LI_Gadt1]
+hListGadt1 = [MkShow1 "3" show, MkShow1 5 show]
+
+showGadt1 (MkShow1 v showF) = showF v
