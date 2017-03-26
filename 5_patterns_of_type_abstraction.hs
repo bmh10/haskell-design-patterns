@@ -412,3 +412,15 @@ hListGadt1 :: [LI_Gadt1]
 hListGadt1 = [MkShow1 "3" show, MkShow1 5 show]
 
 showGadt1 (MkShow1 v showF) = showF v
+
+-- Alternatively, we can also use GADTs with bounded quantification:
+
+data LI_Gadt2 where
+  {MkShow2 :: Show a => a -> LI_Gadt2}
+
+hListGadt1 :: [LI_Gadt1]
+hListGadt2 = [MkShow2 "3", MkShow2 5]
+
+showGadt2 (MkShow2 v) = show v
+
+
