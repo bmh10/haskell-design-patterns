@@ -360,3 +360,21 @@ toInt (Dyn _ _)    = Nothing
 
 -- Heterogeneous Lists
 
+-- Earlier in this section, we saw that GADTs generalize phantom types as well as existentials.
+-- To see this, we explore the heterogeneous lists pattern (lists of varying types):
+
+-- Using existentials
+
+-- We can define a heterogeneous list using existentials:
+
+{-# LANGUAGE ExistentialQuantification #-}
+
+data LI_Eq1 = forall a. LI_Eq1 a
+
+hListEq1 :: [LI_Eq1]
+hListEq1 = [LI_Eq1 3, LI_Eq1 "5"]
+
+-- However, as we saw earlier, we can't do anything with this list.
+-- e.g. in order to show list items we need to package a show function with each item:
+
+data LI_Eq2 = forall a. LI_Eq2 a (a -> String)
