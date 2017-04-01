@@ -449,5 +449,20 @@ instance Coerce Int [Int] where
 
 coerce :: Coerce a b => a -> b
 
+-- This states that coerce is a function a -> b if a can be coerced to b (i.e. if Coerce a b relation exists).
+-- However, with multiple type parameters, type inference suffers.
+-- e.g. compiler rejects:
+
+coerce 12 :: String
+
+-- We have to use type annotations to help the compiler out:
+
+coerce (12::Int) :: String
+coerce (12::Int) :: [Int]
+
+-- This sort of type ambiguity quickly gets out of hand.
+-- This is why multiparameter type-classes were not included in Haskell 98 (they were part of GHC since 1997).
+
+-- Functional Dependencies
 
 
