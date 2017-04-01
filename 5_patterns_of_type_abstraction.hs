@@ -501,4 +501,9 @@ instance Coerce2 Float String where
 
 -- Summary
 
+-- We explored some key language extensions and associated design patterns.
+-- We followed abstraction along three contours: functions, datatypes, and type-classes.
+-- We found that language extensions come with two major costs:
 
+-- 1. Impaired type inference (requiring more type annotations)
+-- 2. Affinity to compiler implementations (decreasing portability of code across compilers).
