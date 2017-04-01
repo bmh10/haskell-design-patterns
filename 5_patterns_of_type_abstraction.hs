@@ -463,6 +463,42 @@ coerce (12::Int) :: [Int]
 -- This sort of type ambiguity quickly gets out of hand.
 -- This is why multiparameter type-classes were not included in Haskell 98 (they were part of GHC since 1997).
 
+
 -- Functional Dependencies
+
+-- Multiparameter classes became more practically useful with the discovery of functional dependencies.
+-- Functional dependencies give us a way to constrain the ambiguity created by multiple type parameters.
+-- e.g. we can constrain the relationship between a and b in Coerce with a functional dependency:
+
+{-# LANGUAGE FunctionalDependencies #-}
+
+class Coerce2 a b | b -> a where
+  coerce2 :: a -> b
+
+instance Coerce2 Int String where
+  coerce2 = show
+
+instance Coerce2 Int [Int] where
+  coerce2 x = [x]
+
+-- The relation (b -> a) tells the compiler that if it can infer b, then in can look up the corresponding a in one of the type-class instances.
+-- So (b -> a) tells the compiler that b determines a uniquely.
+-- e.g.
+
+coerce2 12 :: String
+
+-- The compiler can infer b :: String and can then lookup the uniquely corresponding a :: Int in:
+
+instance Coerce2 Int String where ...
+
+-- The compiler will now also warn us if we add a conflicting instance declaration. e.g:
+
+-- INVALID
+instance Coerce2 Float String where
+  coerce2 = show
+
+-- This is invalid as it means that b :: String could imply either Int or Float.
+
+-- Summary
 
 
