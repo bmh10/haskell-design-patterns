@@ -424,3 +424,30 @@ hListGadt2 = [MkShow2 "3", MkShow2 5]
 showGadt2 (MkShow2 v) = show v
 
 
+-- Abstracting Type-classes
+
+-- There are several ways in which type-classes can be generalized further.
+-- We now focus on extending the number of type-classes from one to many.
+-- Extending to multiparameter type-classes demands that we specify relations between type parameters by way of functional dependencies.
+
+-- Multiparameter type-classes
+
+-- We can view regular type-classes (e.g. a, Ord a, Monad a etc) as a way to specify a set of types.
+-- Multiparameter classes, on the other hand, specify a set of type relations.
+-- e.g. Coerce type-class specifies relation between 2 type parameters:
+
+class Coerce a b where
+  coerce :: a -> b
+
+instance Coerce Int String where
+  coerce = show
+
+instance Coerce Int [Int] where
+  coerce x = [x]
+
+-- The type signature of coerce is as follows:
+
+coerce :: Coerce a b => a -> b
+
+
+
