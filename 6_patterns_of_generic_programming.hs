@@ -43,3 +43,22 @@ g :: String -> String
 -- The type class serves as a contract for ad hoc implementations. It also facilitates generic functions.
 -- Through this combination of type-specific and generic functions, type classes give us a way to generalize functions over disparate types.
 -- This can be referred to as ad hoc datatype genericity.
+
+
+-- Pattern 5 - meta-programming
+
+-- This pattern refers to program specified by other programs.
+-- e.g. relection-based programming (analysing the structure of code and data), template-based meta-programming, or other code generation styles.
+
+-- The Derivable type-classes
+
+-- The Derivable type-classes enable code generation for type-class instances.
+-- Haskell98 included autoderivation for the Eq, Ord, Enum, Bounded, Show, and Read type classes.
+
+-- A second generation of Derivable type-classes was added to the GHC in stages for Data, Typeable, Functor, Foldable, Traversable, and Generic.
+
+-- Haskell98 Derivable type-classes were achieved through compiler analysis of the structure of the derivable datatypes (i.e. a form of metaprogramming).
+-- As there was no unifying formalism underlying the different types, the early Derivable type-classes represent only a rudimentary form of generic programming.
+
+-- Generalized newtype deriving
+
