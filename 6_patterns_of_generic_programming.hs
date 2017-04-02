@@ -23,3 +23,18 @@
 
 -- Pattern 3 - polymorphic types and functions
 
+-- Types parameterized by other types:
+
+Tree a = Leaf a | Node a (Tree a)
+-- is more generic than:
+TreeI = Leaf Int | Node Int TreeI
+
+-- Functions parameterized by polymorphic types:
+
+f :: Tree a -> a
+-- is more generic than:
+g :: String -> String
+
+-- Pattern 4 - type-class polymorphism
+
+
