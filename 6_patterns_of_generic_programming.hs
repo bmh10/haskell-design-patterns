@@ -13,3 +13,13 @@
 
 -- Patterns of Generic Programming
 
+-- Jeremy Gibbons describes seven patterns of generic programming, where each pattern is viewed as a different kind of parameterization.
+
+-- Patterns 1 and 2 - functions
+
+-- Functions parameterized by values are more general than functions with hardcoded values.
+-- This is the simplest kind of generic programming.
+-- Functions parameterized by functions (i.e. higher order functions) are a more powerful form of genericity.
+
+-- Pattern 3 - polymorphic types and functions
+
