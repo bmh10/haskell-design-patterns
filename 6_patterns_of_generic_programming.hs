@@ -62,3 +62,12 @@ g :: String -> String
 
 -- Generalized newtype deriving
 
+-- The GeneralizedNewtypeDeriving language extension allows a newtype declaration to inherit some or all of the type-class instances of an inner type.
+-- This is achieved through a trivial kind of meta-programming.
+-- We used this extension when we created a Monad transformer stack:
+
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
+newtype App a = App {runApp :: ReaderT Config (Writer String) a} deriving (Monad, MonadReader Config, MonadWriter String)
+
+-- Pattern 6 - type laws
