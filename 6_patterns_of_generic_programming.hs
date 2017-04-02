@@ -37,4 +37,9 @@ g :: String -> String
 
 -- Pattern 4 - type-class polymorphism
 
+-- Previously we saw that the Foldable interface provides a uniform interface for folding over different types.
+-- For a type to become Foldable it has to implement functions specific to the type.
 
+-- The type class serves as a contract for ad hoc implementations. It also facilitates generic functions.
+-- Through this combination of type-specific and generic functions, type classes give us a way to generalize functions over disparate types.
+-- This can be referred to as ad hoc datatype genericity.
