@@ -134,4 +134,28 @@ data List' a = Nil' | Cons' a (List' a)
 
 data U = U deriving (Show)
 
+-- The simplify the example, we discard the constructor names and focus only on the structure of the datatype.
+-- We encode the choice between multiple constructors in the style of the Either type:
+
+data Choice a b = L a | R b deriving (Show)
+
+-- List is a choice between U and Cons':
+
+Choice U (Cons' a (List' a))
+
+-- To represent the combo of 2 arguments of Cons', we use the following:
+
+data Combo a b = Combo a b deriving (Show)
+
+-- Consider:
+
+Cons' a (List' a) -> Combo a (List' a)
+
+-- This encodes type constructors with multiple args.
+-- The List type can now be represented as:
+
+type RList a = Choice U (Combo a (List' a))
+
+
+
 
