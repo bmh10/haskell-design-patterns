@@ -98,3 +98,30 @@ newtype App a = App {runApp :: ReaderT Config (Writer String) a} deriving (Monad
 
 
 -- The Sum of Products Style
+
+-- We use List and Tree for an example:
+
+data List' a = Nil' | Cons' a (List' a) deriving (Show)
+data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show)
+
+aList = (Cons' 2 (Cons' 3 (Cons' 5 Nil')))
+intTree = Node 2 (Leaf 3) (Node 5 (Leaf 7) (Leaf 11))
+
+-- As a reference point, here are the datatype-specific size functions:
+
+sizeT (Leaf _) = 1
+sizeT (Node _ lt rt) = 1 + (sizeT lt) + (sizeT rt)
+
+sizeL Nil' = 0
+sizeL (Cons' _ xs) = 1 + (sizeL xs)
+
+-- The shape of the functions follows the shape of the underlying recursive datatype.
+
+-- Instead of using ad hoc polymorphic functions, let's write them in a datatype-generic way.
+-- First we define a type representation.
+-- We follow the style of Lightweight Implementation of Generics and Dynamics (LIGD).
+
+
+-- The sum of products type representation
+
+-- LIGD uses the sum of products style of type representation
