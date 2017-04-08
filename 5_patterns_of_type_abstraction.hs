@@ -507,3 +507,4 @@ instance Coerce2 Float String where
 
 -- 1. Impaired type inference (requiring more type annotations)
 -- 2. Affinity to compiler implementations (decreasing portability of code across compilers).
+

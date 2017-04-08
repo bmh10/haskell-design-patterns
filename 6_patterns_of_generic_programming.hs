@@ -71,3 +71,17 @@ g :: String -> String
 newtype App a = App {runApp :: ReaderT Config (Writer String) a} deriving (Monad, MonadReader Config, MonadWriter String)
 
 -- Pattern 6 - type laws
+
+-- Many fundamental datatypes (e.g. Functor, Applicative, Arrow, Monad) are associated with mathematical laws that are meant to be obeyed by the type implementer.
+-- Since the Haskell type system is not strong enough to express type laws in general, they are not enforceable by the compiler, so the implementer must take responsibility.
+
+-- There are languages (e.g. Coq, Agda, Idris) with type systems designed for expressing laws and constraints for types.
+-- Known as dependently-typed programming languages
+
+-- This limitation in Haskell is a string motivator for Derivable type classes.
+-- Generic implementations of type-classes still have to obey type laws.
+-- We can ensure that the generic code is correct, so that implementers can assume that type laws are obeyed.
+
+-- Pattern 7 - datatype generic programming
+
+
