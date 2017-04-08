@@ -124,4 +124,14 @@ sizeL (Cons' _ xs) = 1 + (sizeL xs)
 
 -- The sum of products type representation
 
--- LIGD uses the sum of products style of type representation
+-- LIGD uses the sum of products style of type representation.
+-- e.g. List' would  be deconstructed as either Nil or the combination of an element with another list.
+-- In order to represent List' we need to be able to express 'Nil', 'choice of either', and 'combination of':
+
+data List' a = Nil' | Cons' a (List' a)
+
+-- Constructors that take no args (e.g. Nil') are represented as follows:
+
+data U = U deriving (Show)
+
+
