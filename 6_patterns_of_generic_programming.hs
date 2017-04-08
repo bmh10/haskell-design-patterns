@@ -84,4 +84,17 @@ newtype App a = App {runApp :: ReaderT Config (Writer String) a} deriving (Monad
 
 -- Pattern 7 - datatype generic programming
 
+-- Datatype generic programming is a sophisticated pattern, based on a simple premise - instead of writing functions for ad hoc types, we deconstruct our types into a more fundamental type representation and then write generic functions against the lower-level type representation instead.
 
+-- The lower level functions are then impervious to changes in the higher level datatypes.
+
+-- Datatype-generic programming can be described as writing functions parameterized by the shape of the datatype.
+-- It is said to exhibit shape/structure polymorphism or polytypism.
+
+-- Parametric polymorphism abstracts from the occurrence of 'integer' is 'lists of integers'.
+-- Datatype polymorphism abstracts from the occurrence of 'list'.
+
+-- The reset of this chapters looks a key patterns of datatype-generic programming.
+
+
+-- The Sum of Products Style
