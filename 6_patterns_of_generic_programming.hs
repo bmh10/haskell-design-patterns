@@ -170,3 +170,25 @@ type RTree a = Choice (Combo U a) (Combo a (Combo (Tree a) (Tree a)))
 
 
 -- Translating between the type and representation
+
+-- Now we have an alternative representation for List, we can translate to and from the type representation:
+
+fromL :: List' a -> RList a
+fromL Nil'         = L U
+fromL (Cons' x xs) = R (Combo x xs)
+
+toL :: RList a -> List' a
+toL (L U)            = Nil'
+toL (R (Combo x xs)) = (Cons' x xs)
+
+main = do
+  print $ fromL aList
+  print $ (toL . fromList) aList
+
+-- Let's capture the translation functions in one type:
+
+data EP d r = EP {from :: (d -> r), to :: (r -> d)}
+
+
+-- Writing a datatype-generic function
+
