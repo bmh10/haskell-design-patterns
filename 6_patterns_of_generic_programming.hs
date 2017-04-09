@@ -209,4 +209,16 @@ data TypeRep t where
   RInt :: TypeRep Int
   RType :: EP d r -> TypeRep r -> TypeRep d
 
+-- TypeRep is a GADT because each constructor returns a different specialization of the general type TypeRep t.
+
+-- Recall RList was defined in terms of the type representation datatypes:
+
+type RList a = Choice U (Combo a (List' a))
+
+-- We need a corresponding type based on the TypeRep constructors.
+-- rList creates creates a more finely-typed representation that packages the list representation together with toL and fromL:
+
+rList :: TypeRep a -> TypeRep (List' a)
+rList tr = RType (EP fromL toL) (RChoice RUnit (RCombo tr (rList tr)))
+
 
