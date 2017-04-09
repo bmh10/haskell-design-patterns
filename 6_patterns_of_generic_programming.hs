@@ -192,3 +192,21 @@ data EP d r = EP {from :: (d -> r), to :: (r -> d)}
 
 -- Writing a datatype-generic function
 
+-- So far out type representation consists on the following 3 data types:
+
+data U = U
+data Choice a b = L a | R b
+data Combo  a b = Combo a b
+
+-- Since we want to define a generic function parameterized by this type representation, we need to group these dispare types into one.
+-- There are different ways of donig this.
+-- We will use a GADT:
+
+data TypeRep t where
+  RUnit :: TypeRep U
+  RChoice :: TypeRep a -> TypeRep b -> TypeRep (Choice a b)
+  RCombo  :: TypeRep a -> TypeRep b -> TypeRep (Combo a b)
+  RInt :: TypeRep Int
+  RType :: EP d r -> TypeRep r -> TypeRep d
+
+
