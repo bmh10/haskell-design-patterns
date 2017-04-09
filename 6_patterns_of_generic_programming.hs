@@ -221,4 +221,24 @@ type RList a = Choice U (Combo a (List' a))
 rList :: TypeRep a -> TypeRep (List' a)
 rList tr = RType (EP fromL toL) (RChoice RUnit (RCombo tr (rList tr)))
 
+-- rList is a recursive function using TypeRep constructors as building blocks.
+-- The first arg (TypeRep a) guides the type resolution of List'.
+
+-- This is why we need the RInt function:
+
+rList (TypeRep Int) -- invalid
+rList RInt          -- valid
+
+-- We would need additional constructors RFloat, RDouble, RChar etc to deal with other types.
+
+-- We can now write a generic function parameterized by both the type representation and the instance of the type:
+
+gSize :: TypeRep a -> a -> Int
+gSize RUnit U = 0
+gSize (RChoice trA trB) (L a) = gSize trA a
+gSize (RChoice trA trB) (R b) = gSize trB b
+gSize (RCombo trA trB) (Combo a b) = (gSize trA a) + (gSize trB b)
+gSize RInt _ = 1
+gSize (RType ep tr) t = gSize tr (from ep t)
+
 
