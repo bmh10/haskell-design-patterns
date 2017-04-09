@@ -156,6 +156,17 @@ Cons' a (List' a) -> Combo a (List' a)
 
 type RList a = Choice U (Combo a (List' a))
 
+-- The RList function does not recurse but refers to List' instead - this is called 'shallow type representation'.
+
+-- Similarly we can represent Tree in this type representation:
+
+type RTree a = Choice (Combo U a) (Combo a (Combo (Tree a) (Tree a)))
+
+-- Combo and Choice both take 2 args but we can express multiple args through nesting:
+
+(Combo a (Combo (Tree a) (Tree a)))
+
+-- In the sum of products representation style, sum refers to Choice, product refers to Combo, and unit refers to U.
 
 
-
+-- Translating between the type and representation
