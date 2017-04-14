@@ -282,4 +282,49 @@ main = print $ gSize (rTree RInt) intTree
 
 -- Origami Programming
 
+-- The the previous section we wrote a generic function for the recursive types Tree and List.
+-- We now look at origami programming which focuses on the core patterns of recursion: map, fold, and unfold.
+
+-- Tying the recursive knot
+
+-- There is a primal type that underlies the recursive datatypes, known as Fix:
+
+data List' a = Nil'   | Cons' a (List' a)
+data Tree  a = Leaf a | Node  a (Tree a) (Tree a)
+
+data Fix s a = FixT {getFix :: s a (Fix s a)}
+
+-- s refers to the shape
+-- a refers to an instance of the type
+
+-- Fix is named after a fixed point of a function, which is defined by the following:
+
+f (fix f) = fix f
+
+-- To express Tree and List in terms of Fix, we need to rewrite them with an implicit recursion:
+
+data List_ a r = Nil_    | Cons_ a r   deriving (Show)
+data Tree_ a r = Leaf_ a | Node_ a r r deriving (Show)
+
+-- We replaced the explicit recursive refs with a more vaguage parameter r.
+-- We can now express ListF and TreeF in terms of Fix:
+
+type ListF a = Fix List_ a
+type TreeF a = Fix Tree_ a
+
+-- The List_ and Tree_ functions don't explicitly recur, so Fix ties the recursive know around the shape.
+-- We can construct a List_ function in a similar way:
+
+-- aList1 :: List_ Integer (List_ a r)
+aList1 = Cons_ 12 Nil_
+
+-- aList2 :: Cons_ 12 (Cons_ 13 Nil_)
+aList2 = Cons_ 12 (Cons_ 13 Nil_)
+
+-- To construct the ListF lists, we need to wrap the FixT constructor around each nesting:
+aListF :: ListF Integer
+aListF = FixT (Cons_ 12 (FixT (Cons_ 13 (FixT Nil)))
+
+-- The generic map
+
 
