@@ -275,3 +275,11 @@ main = print $ gSize (rTree RInt) intTree
 
 -- GHC.Generics - a generic driving mechanism
 
+-- A more generic approach was introduced in 2010 to synthesize the Derivable type-classes of Haskell 98.
+-- The generic deriving mechanism was based on a more sophisticated extension of the sum of products approach.
+-- The new approach also enabled autoderiving of user-defined type classes.
+-- The GHC.Generics library includes this work.
+
+-- Origami Programming
+
+
