@@ -252,4 +252,26 @@ main = print $ gSize (rList RInt) aList
 
 -- Adding a new datatype
 
+-- Adding a new datatype, e.g. Tree, does not require amending the generic functions.
+-- We already defined RTree and are left with fromT, toT, and rTree:
+
+fromT :: Tree a -> RTree a
+fromT (Leaf x) = L (Combo U x)
+fromT (Node x lt rt) = R (Combo x (Combo lt rt))
+
+toT :: RTree a -> Tree a
+toT (L (Combo U x)) = Leaf x
+toT (R (Combo x (Combo lt rt))) = (Node x lt rt)
+
+rTree :: TypeRep a -> TypeRep (Tree a)
+rTree tr = RType (EP fromT toT) (RChoice (RCombo RUnit tr) (RCombo tr (RCombo (rTree tr) (rTree tr))))
+
+-- Now we use the datatype-generic gSize function on Tree:
+
+main = print $ gSize (rTree RInt) intTree
+
+-- We can now use the whole class of generic functions defined against the underlying type representation.
+-- If we were to add gEq, gShow, gFold, gTraverse etc. They would all be automatically applicable to Tree and List.
+
+-- GHC.Generics - a generic driving mechanism
 
