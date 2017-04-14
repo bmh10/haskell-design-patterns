@@ -241,4 +241,15 @@ gSize (RCombo trA trB) (Combo a b) = (gSize trA a) + (gSize trB b)
 gSize RInt _ = 1
 gSize (RType ep tr) t = gSize tr (from ep t)
 
+-- GADTs give a finer precision of types in data constructors, and therefore a finer precision when we perform pattern matching against algebraic datatypes.
+
+-- Finally we can apply the gSize function to (List' Int):
+
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE GADTS #-}
+
+main = print $ gSize (rList RInt) aList
+
+-- Adding a new datatype
+
 
