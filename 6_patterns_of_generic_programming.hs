@@ -327,4 +327,20 @@ aListF = FixT (Cons_ 12 (FixT (Cons_ 13 (FixT Nil)))
 
 -- The generic map
 
+-- We deconstructed List and Tree into the generic recursion type Fix.
+-- This means we can write generic functions against the Fix type.
+
+-- Let's write a map for the fixed recursive type ListF:
+
+mapL f listF = case list_ of
+  (Cons_ x r) -> FixT $ Cons_ (f x) (mapL f r)
+  Nil_        -> FixT Nil_
+    where list_ = getFix listF
+
+showListF :: (Show a) => ListF a -> String
+showListF (FixT (Cons_ x r)) = (show x) ++ ", " ++ (showListF r)
+showListF (FixT (Nil_)) = "Nil_"
+
+mainGenericMap = putStrLn . showListF $ mapL (*2) aListF
+
 
