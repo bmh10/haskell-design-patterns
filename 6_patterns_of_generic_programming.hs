@@ -388,4 +388,26 @@ addL Nil_        = 0
 
 mainAddL = print $ gfold addL aListF
 
--- 
+-- Where fold is a consumer of data structures, unfold is a producer that unfolds a structure from a single value.
+-- To unfold a regular list, we need a value and some functions:
+
+unfoldL stopF nextF val 
+  = if stopF val
+    then []
+    else val : (unfoldL stopF nextF (nextF val))
+
+main = print $ unfoldL (< (-10)) (\x -> x - 1) 10
+
+-- We can use bimap to create a generic unfold:
+
+gunfold : Bifunctor s => (b -> s a b) -> b -> Fix s a
+gunfold f = FixT . bimap id (gunfold f) . f
+
+-- Consider the following example:
+
+toList 0 = Nil_
+toList n = (Cons_ n (n-1))
+
+main = putStrLn . showListF $ gunfold toList 10
+
+-- Generic unfold and fold
