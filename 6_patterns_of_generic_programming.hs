@@ -411,3 +411,21 @@ toList n = (Cons_ n (n-1))
 main = putStrLn . showListF $ gunfold toList 10
 
 -- Generic unfold and fold
+
+-- Composing unfold and fold makes sense because by doing so we are connecting a producer with a consumer:
+
+main = print $ gfold addL (gunfold toList 100)
+
+-- unfold and fold functions are mirror images:
+
+gunfold f = FixT . bimap id (gunfold f) . f
+gfold   f = f    . bimap id (gfold f)   . getFix
+
+-- The hylo function is their composition:
+
+hylo f g = g. bimap id (hylo f g) . f
+main = print $ hylo toList addL 100
+
+-- Origami programming is named due to its dependence on folds and unfolds.
+
+-- Origami design patterns
