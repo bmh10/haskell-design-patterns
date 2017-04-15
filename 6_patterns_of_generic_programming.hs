@@ -369,3 +369,23 @@ gmap f = FixT . bimap f (gmap f) . getFix
 main = putStrLn . showListF $ gmap (*2) aListF
 
 -- The generic fold
+
+-- The bimap function also gives us a generic fold:
+
+gfold :: Bifunctor s => (s a b -> b) -> Fix s a -> b
+gfold f = f . bimap id (gfold f) . getFix
+
+-- We unwrap the list with getFix but this time instead of unwrapping we apply f.
+-- In other words, gfold replaces the occurrences of FixT with f:
+
+-- FixT (Cons_ 12 (FixT (Cons_ 13 (FixT Nil_))))
+-- f    (cons_ 12 (f    (Cons_ 13 (f    Nil_))))
+
+-- To fold together a sum, we create an adder:
+
+addL (Cons_ x r) = x + r
+addL Nil_        = 0
+
+mainAddL = print $ gfold addL aListF
+
+-- 
