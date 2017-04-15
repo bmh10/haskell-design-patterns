@@ -343,4 +343,29 @@ showListF (FixT (Nil_)) = "Nil_"
 
 mainGenericMap = putStrLn . showListF $ mapL (*2) aListF
 
+-- This is clumsy because we have to unwrap the list with getFix and the rewrap the result with FixT.
+-- Bifunctor provides sufficient flexibility to capture a wide variety of recursion patterns as datatype-generic programs.
 
+-- Bifunctor is same as Functor except it can have 2 functions applied to it instead of 1.
+
+-- from Data.Binfunctor
+class Bifunctor s where
+  bimap :: (a -> c) -> (b -> d) -> (s a b -> s c d)
+
+-- Let's make List_ and Tree_ instances of Bifunctor:
+
+instance Bifunctor List_ where
+  bimap f g Nil_        = Nil_
+  bimap f g (Cons_ x r) = Cons_ (f x) (g r)
+
+instance Bifunctor Tree_ where
+  bimap f g (Leaf_ x)       = Leaf_ (f x)
+  bimap f g (Node_ x rl rr) = Node_ (f x) (g rl) (g rr)
+
+-- Now we can write a generic map:
+gmap :: Bifunctor s => (a -> b) -> Fix s a -> Fix s b
+gmap f = FixT . bimap f (gmap f) . getFix
+
+main = putStrLn . showListF $ gmap (*2) aListF
+
+-- The generic fold
