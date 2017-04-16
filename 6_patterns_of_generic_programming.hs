@@ -461,3 +461,19 @@ type Title = String
 type Para = String
 
 haskellDP = Book "Haskell DP" chapters
+chapters = [Chapter "Chapter 1" sections1, Chapter "Chapter 2" sections2]
+sections1 = [Section "1.1" ["S1"], Section "1.2" ["S1.2.1", "S1.2.2"]]
+sections2 = [Section "2.1" ["S2.1"], Section "2.2" ["S2.2.1", "S2.2.2"]]
+
+-- We have a function fSection which we want to apply to all functions in a Book.
+-- Lens could do this as it can deliver a function to elements in a complex structure.
+-- We use a different approach here:
+
+fSection (Section t lines') = Section "!!!" lines'
+main = print $ fSection (Section "1.1" ["S1"])
+
+-- Our strategy will be to morph the function into one that can be applied to all parts of the data structure but will ignore elements for which it was not intended.
+
+-- The type-safe cast with typeable
+
+
