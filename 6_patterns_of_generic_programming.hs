@@ -429,3 +429,23 @@ main = print $ hylo toList addL 100
 -- Origami programming is named due to its dependence on folds and unfolds.
 
 -- Origami design patterns
+
+-- 4 key Gand of Four design patterns are captured by origami recursioni operators:
+
+-- Composite pattern: Recursive datatypes express the composite design pattern.
+-- Since the recursive Fix captures a whole class of recursive datatypes, Fic captures the composite pattern most concisely.
+
+-- Iterator pattern: An iterator gives linear access to the parts of a composite pattern in such a way that the shape of the traversed structure is preserved.
+-- We can construct generic applicative traversals in the origami style we have seen here, capturing the iterator pattern.
+
+-- Visitor pattern: earlier we saw this pattern was captured by polymorphic dispatch.
+-- More generally, the visitor pattern is concerned with structured traversal of a composite - this is what fold enabled.
+-- Visit like fold does not generally preserve the shape of the data structure being visited.
+-- The iterator views the composite as a container of elements. The visitor views the composite shape as insignificant.
+
+-- Builder pattern: separates the construction of a complex objects from its representation, so same construction process can create different representations.
+-- We can express the structured construction of data structures with unfold.
+-- The hylo function (unfold + fold) allows for data generation.
+
+-- Scrap your boilerplate
+
