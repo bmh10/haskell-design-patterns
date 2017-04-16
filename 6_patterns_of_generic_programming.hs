@@ -495,3 +495,15 @@ type Para  = String
 -- If type matches with type inside Maybe we get a Just value, otherwise we get Nothing.
 
 -- Since functions are just types, we can cast them too.
+
+
+-- Type-safe function application
+
+-- We need a higher order fucntion to enable type-safe function application:
+
+typesafeF :: (Typeable a, Typeable b) => (b -> b) -> a -> a
+
+typesafeF f
+ = case (cast f) of
+        Just f' -> f'
+        Nothing -> id
