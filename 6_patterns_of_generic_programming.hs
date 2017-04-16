@@ -474,6 +474,24 @@ main = print $ fSection (Section "1.1" ["S1"])
 
 -- Our strategy will be to morph the function into one that can be applied to all parts of the data structure but will ignore elements for which it was not intended.
 
+
 -- The type-safe cast with typeable
 
+-- To make a type-safe cast possible, we will have to do a type comparison to check whether an element of a book is a section.
 
+-- The Data.Typeable type-class has a cast function.
+-- We can autoderive Typeable for our types:
+
+{-# LANGUAGE DeriveDataTypeable #-}
+import Data.Typeable
+
+data Book = Book Title [Chapter] deriving (Show, Typeable)
+data Chapter = Chapter Title [Section] deriving (Show, Typeable)
+data Section = Section Title [Para] deriving (Show, Typeable)
+type Title = String
+type Para  = String
+
+-- The cast function returns a Maybe value.
+-- If type matches with type inside Maybe we get a Just value, otherwise we get Nothing.
+
+-- Since functions are just types, we can cast them too.
