@@ -449,3 +449,15 @@ main = print $ hylo toList addL 100
 
 -- Scrap your boilerplate
 
+-- SYB is another approach to datatype-generic programming. It provides a way to define generic functions over a universal type representation.
+-- SYB differs from the other 2 approaches we explored in that the type representation is obfuscated from the user.
+
+-- Here we create a generic traversal over a complex nested data structure:
+
+data Book = Book Title [Chapter]
+data Chapter = Chapter Title [Section]
+data Section = Section Title [Para]
+type Title = String
+type Para = String
+
+haskellDP = Book "Haskell DP" chapters
