@@ -522,4 +522,43 @@ main = do
 
 -- The shallow traversal and the data type-class
 
+-- In both the sum of products and origami styles of generic programming, we encountered shallow recursion in use.
+-- Let's explore how we might traverse a Book class using a function with a shallow approach.
+-- Starting with traversal of a Chapter variable, we will write the following:
 
+-- INVALID
+gmap f (Chapter title sections) = Chapter (f title) (f sections)
+
+-- The function cannot handle all the different types it is being applied to.
+-- We need to resort to Rank2Types so that we can define a gmap function that accepts a generic mapping function.
+
+-- We also make gmap part of the Data' type-class to be implemented by all types we plan to traverse over:
+
+{-# LANGUAGE Rank2Types #-}
+
+-- Data' inherits from Typeable
+class Typeable a => Data' a where
+  gmap :: (forall b. Data' b => b -> b) -> a -> a
+
+-- Note the shallow recursion in gmap implementations:
+
+instance Data' Book where
+  gmap f (Book title chapters) = Book (f title) (f chapters)
+
+instance Data' Chapter where
+  gmap f (Chapter title sections) = Chapter (f title) (f sections)
+
+instance Data' Section where
+  gmap f (Section title paras) = Section (f title) (f paras)
+
+instance Data' a => Data' [a] where
+  gmap f []     = []
+  gmap f (x:xs) = f x : f xs
+
+instance Data' Char where
+  gmap f c = c
+
+main = do
+  print $ gmap (typesafeF fSection) chapter
+  print $ gmap (typesafeF fSection) sections1
+    where chapter = (Chapter "The building blocks" sections1)
