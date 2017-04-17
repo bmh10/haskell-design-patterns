@@ -562,3 +562,24 @@ main = do
   print $ gmap (typesafeF fSection) chapter
   print $ gmap (typesafeF fSection) sections1
     where chapter = (Chapter "The building blocks" sections1)
+
+-- If we traverse a chapter with fSection, the sections are not reached by traversal.
+-- When we traverse a list of sections only the first is affected.
+
+-- This shallow traversal seems pointless but it bring the advantages that we can mold it to different kinds of recursions:
+
+-- bottom up: traverse x before applying f
+traverse :: Data' a => (forall b . Data' b => b -> b) -> a -> a
+traverse f x = f (gmap (traverse f) x)
+
+-- top-down traversal: apply f x then traverse
+traverse' f x = gmap (traverse' f) (f x)
+
+-- Now traversal reaches all sections
+main = do
+  print $ traverse (typesafeF fsection) chapter
+  print $ traverse (typesafeF fSection) sections1
+  print $ traverse' (typesafeF fBook) haskellDP
+    where
+      chapter = (Chapter "The building blocks" sections1)
+      fBook (Book t  chapters) = Book "!!!" chapters
