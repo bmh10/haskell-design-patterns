@@ -507,3 +507,19 @@ typesafeF f
  = case (cast f) of
         Just f' -> f'
         Nothing -> id
+
+-- By lifting fSection into a type-safe function, we can apply it to any part of the Book type (or any Typeable type).
+
+main = do
+  print $ (typesafeF fSection) aSection
+  print $ (typesafeF fSection) aBook
+  where
+    aSection = (Section "1.1" ["s1", "s2"])
+    aBook = (Book "title" [])
+
+-- typesafeF fSection leaves all values not targeted by the fSection function.
+
+
+-- The shallow traversal and the data type-class
+
+
