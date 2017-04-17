@@ -590,3 +590,12 @@ main = do
 
 -- Typeable & Data
 
+-- Our data' type-class mimics the Haskell Data type-class, which is based on the more general gfoldl (as opposed to gmap).
+-- The SYB approach relies on the compiler to auto-generate instances of Typeable and Data.
+-- This is in contrast to the sum of product and origami styles which involve the programmer directly in the transformation to and from the relevant type representation.
+
+-- In SYB the interface consists of generic combinators based on Typeable and Data.
+-- It is said that Typeable provides the backend of SYB and data provides the frontend.
+
+-- We are not directly engaged with the type representation but we still deal with the generic functions defined in the abstract data shape.
+-- Data provides the abstraction over shapes made of Typeable's
