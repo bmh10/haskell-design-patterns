@@ -583,3 +583,10 @@ main = do
     where
       chapter = (Chapter "The building blocks" sections1)
       fBook (Book t  chapters) = Book "!!!" chapters
+
+-- Combined gmap and typesafeF enable us to deliver type-specific functions deeply into nested structures.
+-- Recursive traversal in 2 steps - first define a one-layer map, then tie the recursive knot separately.
+
+
+-- Typeable & Data
+
